@@ -823,7 +823,7 @@ contains
        if (irrigate) then
 
           if (use_fates) then
-             call endrun(msg=' ERROR: Can not have ' // &
+             call endrun(msg=' ERROR: Cannot have ' // &
                              'use_fates = .true. and irrigate = .true. ' // &
                              'Set one of them to .false. in your user_nl_clm. ' // &
                              errMsg(sourcefile, __LINE__))
