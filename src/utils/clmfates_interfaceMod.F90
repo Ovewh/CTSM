@@ -108,6 +108,7 @@ module CLMFatesInterfaceMod
    use clm_time_manager  , only : get_curr_days_per_year, &
                                   get_curr_date,     &
                                   get_ref_date,      &
+                                  get_curr_calday,   &
                                   timemgr_datediff,  &
                                   is_beg_curr_day,   &
                                   get_step_size_real,&
@@ -144,7 +145,6 @@ module CLMFatesInterfaceMod
    use FatesInterfaceMod     , only : zero_bcs
    use FatesInterfaceMod     , only : SetFatesTime
    use FatesInterfaceMod     , only : set_fates_ctrlparms
-   use FatesInterfaceMod     , only : set_fates_drydep_indices
    use FatesInterfaceMod     , only : UpdateFatesRMeansTStep
    use FatesInterfaceMod     , only : InitTimeAveragingGlobals
    
@@ -2639,13 +2639,20 @@ module CLMFatesInterfaceMod
    end subroutine wrap_btran
 
    ! ====================================================================================                   
-   subroutine wrap_drydep(this, nc,  drydepvel_inst)
+   subroutine wrap_drydep(this, nc, waterdiagnosticbulk_inst, drydepvel_inst)
 
-
-     use DryDepVelocity, only : drydepvel_type
+      ! ---------------------------------------------------------------------------------
+      ! This subroutine calculates wesley vegetation and season indexies based on 
+      ! a fates parameter value, tlai, snow depth and clm time.
+      ! 
+      !
+      ! ---------------------------------------------------------------------------------
+     use DryDepVelocity,          only : drydepvel_type
+     use WaterDiagnosticBulkType, only : waterdiagnosticbulk_type
      
      class(hlm_fates_interface_type), intent(inout) :: this
      integer                 , intent(in)           :: nc
+     type(waterdiagnosticbulk_type)  , intent(in)   :: waterdiagnosticbulk_inst
      type(drydepvel_type)  , intent(inout)          :: drydepvel_inst
      
      integer :: npatch  ! number of patches in each site
@@ -2654,27 +2661,68 @@ module CLMFatesInterfaceMod
      integer :: s       ! site index
      integer :: c       ! column index
      integer :: g       ! grid cell
+     integer :: iseason ! season index
+     integer :: cday                       ! day of the year
 
      associate( &
                wesley_veg_index    => drydepvel_inst%wesley_veg_index_patch  , &
-               wesley_season_index => drydepvel_inst%wesley_season_index_patch &
+               wesley_season_index => drydepvel_inst%wesley_season_index_patch, &
+               snow_depth          => waterdiagnosticbulk_inst%snow_depth_col &
               )
                
-      ! Call thee FATES routine to set the PFT and season indices for the drydep routines in CLM
-      call set_fates_drydep_indices(this%fates(nc)%nsites, &
-           this%fates(nc)%sites,  &
-           this%fates(nc)%bc_out ) 
-
+      cday = get_curr_calday(reuse_day_365_for_day_366=.true.)
       ! Load the dry deposition indices from the FATES output structure into the CLM variables. 
       do s = 1,this%fates(nc)%nsites
           c = this%f2hmap(nc)%fcolumn(s)
           g = col%gridcell(c)
+          ! bad value for later check
+          wesley_season_index(col%patchi(c):col%patchf(c)) = -1
+
           do ifp = 1, this%fates(nc)%sites(s)%youngest_patch%patchno
              ! for the vegetated patches
              p = ifp+col%patchi(c)
-             wesley_veg_index(p) = this%fates(nc)%bc_out(s)%wesley_pft_label_pa(ifp)
-             wesley_season_index(p) = this%fates(nc)%bc_out(s)%drydep_season_pa(ifp)
+             ! right now we only get hardcoded map from the param file, this might get caclulated later within fates to make it work with full
+             wesley_veg_index(p) = EDPftvarcon_inst%wesley_pft_index_fordrydep(this%fates(nc)%bc_out(s)%nocomp_pft_label_pa(ifp))
+             iseason=-1
+             ! determine season (this should actually be done by comparing LAI history)
+             ! TODO move thresholds to paramfile and make them per pft
+             if (this%fates(nc)%bc_out(s)%tlai_pa(ifp) .gt. 2.0_r8)then
+                iseason = 1 ! Summer, or something like it.
+             else ! NOT SUMMER
+                if (cday .lt. 182)then 
+                   if (grc%latdeg(g)>0._r8)then ! Northern Hemisphere
+                      iseason = 5 ! NH spring
+                   else ! !Southern Hemisphere
+                      if (this%fates(nc)%bc_out(s)%tlai_pa(ifp) .gt. 1.0_r8)then
+                         iseason = 2 ! SH early autumn
+                      else 
+                         iseason = 3 ! SH late autumn
+                      endif
+                   endif
+                else 
+                   if (grc%latdeg(g)>0._r8)then ! Northern Hemisphere
+                      if (this%fates(nc)%bc_out(s)%tlai_pa(ifp) .gt. 1.0_r8)then
+                         iseason = 2 ! NH early autumn
+                      else 
+                        iseason = 3 ! NH late autumn
+                      endif
+                   else ! !Southern Hemisphere
+                      iseason = 5 ! SH spring
+                   endif
+                endif ! Hemisphere
+             endif
+             if (snow_depth(c) > 0.0_r8) then
+                iseason=4
+             endif
+             wesley_season_index(p) = iseason
           end do
+          ! make sure to set bareground explicitly
+          wesley_veg_index(col%patchi(c)) = 8
+          wesley_season_index(col%patchi(c)) = 3
+          if (snow_depth(c) > 0.0_r8) then
+             wesley_season_index(col%patchi(c)) = 4
+          endif
+
        end do
 
      end associate
