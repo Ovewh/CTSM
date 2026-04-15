@@ -2662,38 +2662,55 @@ module CLMFatesInterfaceMod
      integer :: c       ! column index
      integer :: g       ! grid cell
      integer :: iseason ! season index
+     integer :: ncpft   ! nocomp pft label of the patch
      integer :: cday                       ! day of the year
+     integer, parameter :: midyear = 182   ! middle of the year
 
      associate( &
-               wesley_veg_index    => drydepvel_inst%wesley_veg_index_patch  , &
+               wesley_veg_index    => drydepvel_inst%wesley_veg_index_patch   , &
                wesley_season_index => drydepvel_inst%wesley_season_index_patch, &
-               snow_depth          => waterdiagnosticbulk_inst%snow_depth_col &
+               snow_depth          => waterdiagnosticbulk_inst%snow_depth_col , &
+               wvi                 => EDPftvarcon_inst%wesley_veg_index       , &
+               wst                 => EDPftvarcon_inst%wesley_sum_thresh      , &
+               wat                 => EDPftvarcon_inst%wesley_aut_thresh        &
               )
                
       cday = get_curr_calday(reuse_day_365_for_day_366=.true.)
-      ! Load the dry deposition indices from the FATES output structure into the CLM variables. 
+
+      if (masterproc .and. (.not. use_fates_nocomp)) then
+         call endrun(msg='ERROR: dry deposition currently works only in NOCOMP mode '//errMsg(__FILE__, __LINE__))
+      endif
+
+
       do s = 1,this%fates(nc)%nsites
           c = this%f2hmap(nc)%fcolumn(s)
           g = col%gridcell(c)
           ! bad value for later check
           wesley_season_index(col%patchi(c):col%patchf(c)) = -1
-
+          !wesely seasonal "index_season"
+          ! 1 - midsummer with lush vegetation
+          ! 2 - Autumn with unharvested cropland
+          ! 3 - Late autumn after frost, no snow
+          ! 4 - Winter, snow on ground and subfreezing
+          ! 5 - Transitional spring with partially green short annuals
           do ifp = 1, this%fates(nc)%sites(s)%youngest_patch%patchno
              ! for the vegetated patches
              p = ifp+col%patchi(c)
-             ! right now we only get hardcoded map from the param file, this might get caclulated later within fates to make it work with full
-             wesley_veg_index(p) = EDPftvarcon_inst%wesley_pft_index_fordrydep(this%fates(nc)%bc_out(s)%nocomp_pft_label_pa(ifp))
+             ncpft = (this%fates(nc)%bc_out(s)%nocomp_pft_label_pa(ifp))
+             ! right now we only get hardcoded map from the param file, 
+             ! this might get caclulated later within fates to make it work with full fates
+             wesley_veg_index(p) = int(wvi(ncpft))
              iseason=-1
-             ! determine season (this should actually be done by comparing LAI history)
-             ! TODO move thresholds to paramfile and make them per pft
-             if (this%fates(nc)%bc_out(s)%tlai_pa(ifp) .gt. 2.0_r8)then
+             ! determine season 
+             !(this should actually be done by comparing LAI history, but now it's just thresholds)
+             if (this%fates(nc)%bc_out(s)%tlai_pa(ifp) .gt. wst(ncpft))then
                 iseason = 1 ! Summer, or something like it.
              else ! NOT SUMMER
-                if (cday .lt. 182)then 
+                if (cday .lt. midyear)then 
                    if (grc%latdeg(g)>0._r8)then ! Northern Hemisphere
                       iseason = 5 ! NH spring
                    else ! !Southern Hemisphere
-                      if (this%fates(nc)%bc_out(s)%tlai_pa(ifp) .gt. 1.0_r8)then
+                      if (this%fates(nc)%bc_out(s)%tlai_pa(ifp) .gt. wat(ncpft) )then
                          iseason = 2 ! SH early autumn
                       else 
                          iseason = 3 ! SH late autumn
@@ -2701,7 +2718,7 @@ module CLMFatesInterfaceMod
                    endif
                 else 
                    if (grc%latdeg(g)>0._r8)then ! Northern Hemisphere
-                      if (this%fates(nc)%bc_out(s)%tlai_pa(ifp) .gt. 1.0_r8)then
+                      if (this%fates(nc)%bc_out(s)%tlai_pa(ifp) .gt. wat(ncpft))then
                          iseason = 2 ! NH early autumn
                       else 
                         iseason = 3 ! NH late autumn
