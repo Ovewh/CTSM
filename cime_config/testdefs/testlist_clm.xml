@@ -4902,7 +4902,7 @@
       <option name="comment">"check for numerical instabilities during spinup"</option>
     </options>
   </test>
-  <test name="ERS_D_Ld761_P1536" grid="ne16pg3_ne16pg3_mtn14" compset="I1850Clm60FatesNoComp" testmods="clm/FatesColdNoCompFixedBioGeo">
+  <test name="ERS_Ld761_P1536" grid="ne16pg3_ne16pg3_mtn14" compset="I1850Clm60FatesNoComp" testmods="clm/FatesColdNoCompFixedBioGeo">
     <machines>
       <machine name="olivia" compiler="intel" category="aux_clm_noresm"/>
     </machines>
@@ -5137,7 +5137,7 @@
       <machine name="olivia" compiler="intel" category="aux_clm_noresm"/>
     </machines>
     <options>
-      <option name="wallclock">00:20:00</option>
+      <option name="wallclock">00:40:00</option>
       <option name="comment">""</option>
     </options>
   </test>
