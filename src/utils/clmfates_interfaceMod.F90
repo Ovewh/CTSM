@@ -46,7 +46,7 @@ module CLMFatesInterfaceMod
    use CNProductsMod     , only : cn_products_type
    use clm_varctl        , only : iulog
    use clm_varctl        , only : fates_parteh_mode
-   use PRTGenericMod     , only : prt_cnp_flex_allom_hyp
+   use PRTGenericMod     , only : carbon_only,carbon_nitrogen_phosphorus
    use clm_varctl        , only : use_fates
    use clm_varctl        , only : fates_spitfire_mode
    use clm_varctl        , only : use_fates_managed_fire
@@ -58,6 +58,7 @@ module CLMFatesInterfaceMod
    use clm_varctl        , only : use_fates_ed_st3
    use clm_varctl        , only : use_fates_ed_prescribed_phys
    use clm_varctl        , only : fates_harvest_mode
+   use clm_varctl        , only : fates_lu_transition_logic
    use clm_varctl        , only : fates_stomatal_model
    use clm_varctl        , only : fates_stomatal_assimilation
    use clm_varctl        , only : fates_leafresp_model
@@ -94,6 +95,8 @@ module CLMFatesInterfaceMod
    use clm_varpar        , only : nlevdecomp
    use clm_varpar        , only : nlevdecomp_full
    use clm_varpar        , only : nlevsoi
+   use clm_varpar        , only : clmfates_carbon_only
+   use clm_varpar        , only : clmfates_carbon_nitrogen
    use PhotosynthesisMod , only : photosyns_type
    use atm2lndType       , only : atm2lnd_type
    use SurfaceAlbedoType , only : surfalb_type
@@ -311,17 +314,16 @@ module CLMFatesInterfaceMod
      ! in CTSM
      ! --------------------------------------------------------------------------------
 
-     integer,intent(in)                             :: surf_numpft
-     integer,intent(in)                             :: surf_numcft
-     integer,intent(out)                            :: maxsoil_patches
-     integer                                        :: pass_use_fixed_biogeog
-     integer                                        :: pass_use_nocomp
-     integer                                        :: pass_use_sp
-     integer                                        :: pass_use_drydep
-     integer                                        :: pass_masterproc
-     integer                                        :: pass_use_luh2
-     logical                                        :: verbose_output
-
+     integer,intent(in)  :: surf_numpft
+     integer,intent(in)  :: surf_numcft
+     integer,intent(out) :: maxsoil_patches
+     integer             :: pass_use_fixed_biogeog
+     integer             :: pass_use_nocomp
+     integer             :: pass_use_sp
+     integer             :: pass_masterproc
+     integer             :: pass_use_luh2
+     integer             :: pass_parteh_mode
+     logical             :: verbose_output
      
      call t_startf('fates_globals1')
 
@@ -356,13 +358,6 @@ module CLMFatesInterfaceMod
         end if
         call set_fates_ctrlparms('use_sp',ival=pass_use_sp)
 
-        if(n_drydep>0) then
-           pass_use_drydep = 1
-        else
-           pass_use_drydep = 0
-        endif
-        call set_fates_ctrlparms('use_drydep',ival=pass_use_drydep)
-
         if(masterproc)then
            pass_masterproc = 1
         else
@@ -378,8 +373,24 @@ module CLMFatesInterfaceMod
         end if
         call set_fates_ctrlparms('use_luh2',ival=pass_use_luh2)
 
-        
-        call set_fates_ctrlparms('parteh_mode',ival=fates_parteh_mode)
+        if(trim(fates_parteh_mode)==trim(clmfates_carbon_only))then
+           pass_parteh_mode = carbon_only
+        elseif(trim(fates_parteh_mode)==trim(clmfates_carbon_nitrogen))then
+           ! FATES has NO carbon_nitrogen mode. It cycles
+           ! either carbon alone, or carbon with both nutrients
+           ! If we want to couple nitrogen, we tell FATES
+           ! to use synthetic uptake conditions for phosphorus, which
+           ! most likely will be ample so that P stores in plants
+           ! are saturated and non-limiting
+           pass_parteh_mode = carbon_nitrogen_phosphorus
+        else
+           write(iulog,*) 'FATES coupling mode must be either'
+           write(iulog,*) trim(clmfates_carbon_only),' or '
+           write(iulog,*) trim(clmfates_carbon_nitrogen)
+           write(iulog,*) 'you specified: ',trim(fates_parteh_mode)
+           call endrun(msg=errMsg(sourcefile, __LINE__))
+        end if
+        call set_fates_ctrlparms('parteh_mode',ival=pass_parteh_mode)
         
      end if
 
@@ -417,7 +428,6 @@ module CLMFatesInterfaceMod
        
      integer                                        :: pass_vertsoilc
      integer                                        :: pass_ch4
-     integer                                        :: pass_spitfire
      integer                                        :: pass_ed_st3
      integer                                        :: pass_num_lu_harvest_cats
      integer                                        :: pass_lu_harvest
@@ -652,6 +662,7 @@ module CLMFatesInterfaceMod
         end if
         call set_fates_ctrlparms('num_luh2_states',ival=pass_num_luh_states)
         call set_fates_ctrlparms('num_luh2_transitions',ival=pass_num_luh_transitions)
+        call set_fates_ctrlparms('fates_lu_transition_logic',ival=fates_lu_transition_logic)
 
         if ( use_fates_potentialveg ) then
            pass_use_potentialveg = 1
@@ -1424,25 +1435,25 @@ module CLMFatesInterfaceMod
        nf_soil%decomp_npools_sourcesink_col(c,:,:) = 0._r8
        
        if ( .not. use_fates_sp ) then
-
+          
           ! (gC/m3/timestep)
-          !nf_soil%decomp_npools_sourcesink_col(c,1:nlevdecomp,i_met_lit) = &
-          !     nf_soil%decomp_npools_sourcesink_col(c,1:nlevdecomp,i_met_lit) + &
-          !     this%fates(ci)%bc_out(s)%litt_flux_lab_n_si(1:nlevdecomp)*dtime
+          nf_soil%decomp_npools_sourcesink_col(c,1:nlevdecomp,i_met_lit) = &
+               nf_soil%decomp_npools_sourcesink_col(c,1:nlevdecomp,i_met_lit) + &
+               this%fates(ci)%bc_out(s)%litt_flux_lab_n_si(1:nlevdecomp)*dtime
 
           ! Used for mass balance checking (gC/m2/s)
-          !nf_soil%fates_litter_flux(c) = sum(this%fates(ci)%bc_out(s)%litt_flux_lab_n_si(1:nlevdecomp) * &
-          !                                   this%fates(ci)%bc_in(s)%dz_decomp_sisl(1:nlevdecomp))
+          nf_soil%fates_litter_flux(c) = sum(this%fates(ci)%bc_out(s)%litt_flux_lab_n_si(1:nlevdecomp) * &
+                                             this%fates(ci)%bc_in(s)%dz_decomp_sisl(1:nlevdecomp))
           
-          i_cel_lit = i_met_lit + 1
+          i_cel_lit = i_met_lit + 1  ! slevis note: in mimics i_cel_lit = i_str_lit = i_met_lit + 1
           
-          !nf_soil%decomp_npools_sourcesink_col(c,1:nlevdecomp,i_cel_lit) = &
-          !     nf_soil%decomp_npools_sourcesink_col(c,1:nlevdecomp,i_cel_lit) + &
-          !     this%fates(ci)%bc_out(s)%litt_flux_cel_n_si(1:nlevdecomp)*dtime
+          nf_soil%decomp_npools_sourcesink_col(c,1:nlevdecomp,i_cel_lit) = &
+               nf_soil%decomp_npools_sourcesink_col(c,1:nlevdecomp,i_cel_lit) + &
+               this%fates(ci)%bc_out(s)%litt_flux_cel_n_si(1:nlevdecomp)*dtime
 
-          !nf_soil%fates_litter_flux(c) = nf_soil%fates_litter_flux(c) + &
-          !     sum(this%fates(ci)%bc_out(s)%litt_flux_cel_n_si(1:nlevdecomp) * &
-          !         this%fates(ci)%bc_in(s)%dz_decomp_sisl(1:nlevdecomp))
+          nf_soil%fates_litter_flux(c) = nf_soil%fates_litter_flux(c) + &
+               sum(this%fates(ci)%bc_out(s)%litt_flux_cel_n_si(1:nlevdecomp) * &
+                   this%fates(ci)%bc_in(s)%dz_decomp_sisl(1:nlevdecomp))
 
           if (decomp_method == mimics_decomp) then
              ! Mimics has a structural pool, which is cellulose and lignan
@@ -1452,16 +1463,14 @@ module CLMFatesInterfaceMod
              i_lig_lit = i_cel_lit + 1
           end if
         
-          !nf_soil%decomp_npools_sourcesink_col(c,1:nlevdecomp,i_lig_lit) = &
-          !     nf_soil%decomp_npools_sourcesink_col(c,1:nlevdecomp,i_lig_lit) + &
-          !     this%fates(ci)%bc_out(s)%litt_flux_lig_n_si(1:nlevdecomp)*dtime
+          nf_soil%decomp_npools_sourcesink_col(c,1:nlevdecomp,i_lig_lit) = &
+               nf_soil%decomp_npools_sourcesink_col(c,1:nlevdecomp,i_lig_lit) + &
+               this%fates(ci)%bc_out(s)%litt_flux_lig_n_si(1:nlevdecomp)*dtime
           
-          !nf_soil%fates_litter_flux(c) = nf_soil%fates_litter_flux(c) + &
-          !     sum(this%fates(ci)%bc_out(s)%litt_flux_lig_n_si(1:nlevdecomp) * &
-          !         this%fates(ci)%bc_in(s)%dz_decomp_sisl(1:nlevdecomp))
+          nf_soil%fates_litter_flux(c) = nf_soil%fates_litter_flux(c) + &
+               sum(this%fates(ci)%bc_out(s)%litt_flux_lig_n_si(1:nlevdecomp) * &
+                   this%fates(ci)%bc_in(s)%dz_decomp_sisl(1:nlevdecomp))
 
-          nf_soil%fates_litter_flux = 0._r8
-          
        else
 
           ! In SP mode their is no mass flux between the two 
@@ -1941,7 +1950,7 @@ module CLMFatesInterfaceMod
          do nc = 1, nclumps
             if (this%fates(nc)%nsites>0) then
                call this%fates_restart%set_restart_vectors(nc,this%fates(nc)%nsites, &
-                                                           this%fates(nc)%sites)
+                                                           this%fates(nc)%sites,this%fates(nc)%bc_in)
             end if
          end do
          !$OMP END PARALLEL DO
@@ -2029,7 +2038,7 @@ module CLMFatesInterfaceMod
                     this%fates(nc)%bc_out)
 
                call this%fates_restart%get_restart_vectors(nc, this%fates(nc)%nsites, &
-                    this%fates(nc)%sites )
+                    this%fates(nc)%sites,this%fates(nc)%bc_in )
 
                ! I think ed_update_site and update_hlmfates_dyn are doing some similar
                ! update type stuff, should consolidate (rgk 11-2016)
@@ -2961,15 +2970,15 @@ module CLMFatesInterfaceMod
            this%fates(ci)%bc_out(s)%hrv_deadstemc_to_prod100c
 
       ! If N cycling is on
-      if(fates_parteh_mode == prt_cnp_flex_allom_hyp ) then
+      if ( trim(fates_parteh_mode)==trim(clmfates_carbon_nitrogen) ) then
          
-         !n_products_inst%hrv_deadstem_to_prod10_grc(g) = &
-         !     n_products_inst%hrv_deadstem_to_prod10_grc(g) + &
-         !     this%fates(ci)%bc_out(s)%hrv_deadstemc_to_prod10c
+         n_products_inst%hrv_deadstem_to_prod10_grc(g) = &
+              n_products_inst%hrv_deadstem_to_prod10_grc(g) + &
+              this%fates(ci)%bc_out(s)%hrv_deadstemc_to_prod10c
          
-         !n_products_inst%hrv_deadstem_to_prod100_grc(g) = &
-         !     n_products_inst%hrv_deadstem_to_prod100_grc(g) + &
-         !     this%fates(ci)%bc_out(s)%hrv_deadstemc_to_prod100c
+         n_products_inst%hrv_deadstem_to_prod100_grc(g) = &
+              n_products_inst%hrv_deadstem_to_prod100_grc(g) + &
+              this%fates(ci)%bc_out(s)%hrv_deadstemc_to_prod100c
          
       end if
 
@@ -4141,7 +4150,7 @@ module CLMFatesInterfaceMod
 
    ! Land use name arrays
    character(len=10), parameter  :: landuse_pft_map_varnames(num_landuse_pft_vars) = &
-                    [character(len=10)  :: 'frac_primr','frac_secnd','frac_pastr','frac_range'] !need to move 'frac_surf' to a different variable
+                    [character(len=10)  :: 'frac_primr','frac_secnd','frac_range','frac_pastr'] !need to move 'frac_surf' to a different variable
 
    character(len=*), parameter :: subname = 'GetLandusePFTData'
 
