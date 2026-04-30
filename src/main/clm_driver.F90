@@ -1124,8 +1124,8 @@ contains
 
        ! Dry Deposition of chemical tracers (Wesely (1998) parameterizaion)
        !  TODO PUT FAteS DRYDEP wrapper here
-       if(use_fates.and. n_drydep >0)then
-          call clm_fates%wrap_drydep(nc, drydepvel_inst)
+       if (use_fates .and. n_drydep >0)then
+          call clm_fates%wrap_drydep(nc,water_inst%waterdiagnosticbulk_inst, drydepvel_inst)
        end if 
        call t_startf('depvel')
        call depvel_compute(bounds_clump, &

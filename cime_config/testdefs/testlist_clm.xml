@@ -4911,6 +4911,7 @@
   <test name="SMS_D" grid="ne30pg3_ne30pg3_mtn14" compset="I2000Clm60FatesSpRsGs" testmods="clm/FatesColdSatPhen">
     <machines>
       <machine name="betzy" compiler="gnu" category="aux_clm_noresm"/>
+      <machine name="olivia" compiler="gnu" category="aux_clm_noresm"/>
     </machines>
     <options>
       <option name="wallclock">00:30:00</option>
@@ -4920,6 +4921,7 @@
   <test name="ERP_Ld30" grid="f45_f45_mg37" compset="I2000Clm60FatesSpRsGs" testmods="clm/FatesColdSatPhen">
     <machines>
       <machine name="betzy" compiler="intel" category="aux_clm_noresm"/>
+      <machine name="olivia" compiler="intel" category="aux_clm_noresm"/>
     </machines>
     <options>
       <option name="wallclock">00:30:00</option>
@@ -4929,6 +4931,7 @@
   <test name="ERI_D_Ld30" grid="f45_f45_mg37" compset="I1850Clm60FatesSp" testmods="clm/FatesColdClm60Cam7LndTuningMode">
     <machines>
       <machine name="betzy" compiler="gnu" category="aux_clm_noresm"/>
+      <machine name="olivia" compiler="gnu" category="aux_clm_noresm"/>
     </machines>
     <options>
       <option name="wallclock">00:30:00</option>
@@ -4938,6 +4941,7 @@
   <test name="SMS_D" grid="ne16pg3_ne16pg3_mtn14" compset="I2000Clm60FatesSpRsGs" testmods="clm/FatesColdDryDepSatPhen">
     <machines>
       <machine name="betzy" compiler="intel" category="aux_clm_noresm"/>
+      <machine name="olivia" compiler="intel" category="aux_clm_noresm"/>
     </machines>
     <options>
       <option name="wallclock">00:20:00</option>
@@ -4947,6 +4951,7 @@
   <test name="SMS_Ld1" grid="f45_f45_mg37" compset="I1850Clm60FatesSp" testmods="clm/FatesColdReducedOutput">
     <machines>
       <machine name="betzy" compiler="gnu" category="aux_clm_noresm"/>
+      <machine name="olivia" compiler="gnu" category="aux_clm_noresm"/>
     </machines>
     <options>
       <option name="wallclock">00:30:00</option>
@@ -4959,6 +4964,7 @@
   <test name="ERS_D_Ld11" grid="ne30pg3_ne30pg3_mtn14" compset="I1850Clm60FatesNocompSpinup" testmods="clm/FatesColdSpinup">
     <machines>
       <machine name="betzy" compiler="intel" category="aux_clm_noresm"/>
+      <machine name="olivia" compiler="intel" category="aux_clm_noresm"/>
     </machines>
     <options>
       <option name="wallclock">00:50:00</option>
@@ -4969,6 +4975,16 @@
   <test name="ERS_Ld11_P1536" grid="ne30pg3_ne30pg3_mtn14" compset="I1850Clm60FatesNocompSpinup" testmods="clm/FatesIniSpinup">
     <machines>
       <machine name="betzy" compiler="intel" category="aux_clm_noresm"/>
+    </machines>
+    <options>
+      <option name="wallclock">00:50:00</option>
+      <option name="comment">""</option>
+    </options>
+  </test>
+
+  <test name="ERS_Ld11" grid="ne30pg3_ne30pg3_mtn14" compset="I1850Clm60FatesNocompSpinup" testmods="clm/FatesIniSpinup">
+    <machines>
+      <machine name="olivia" compiler="intel" category="aux_clm_noresm"/>
     </machines>
     <options>
       <option name="wallclock">00:50:00</option>
@@ -4994,9 +5010,19 @@
       <option name="comment">"check for numerical instabilities during spinup"</option>
     </options>
   </test>
+  <test name="ERS_Ld761_P1536" grid="ne16pg3_ne16pg3_mtn14" compset="I1850Clm60FatesNoComp" testmods="clm/FatesColdNoCompFixedBioGeo">
+    <machines>
+      <machine name="olivia" compiler="intel" category="aux_clm_noresm"/>
+    </machines>
+    <options>
+      <option name="wallclock">02:50:00</option>
+      <option name="comment">"check for numerical instabilities during spinup"</option>
+    </options>
+  </test>
   <test name="ERI_D_Ld11" grid="ne30pg3_ne30pg3_mtn14" compset="I1850Clm60FatesNocompSpinup" testmods="clm/FatesColdSpinupAD">
     <machines>
       <machine name="betzy" compiler="gnu" category="aux_clm_noresm"/>
+      <machine name="olivia" compiler="gnu" category="aux_clm_noresm"/>
     </machines>
     <options>
       <option name="wallclock">00:50:00</option>
@@ -5006,6 +5032,7 @@
   <test name="ERI_D_Ld30" grid="f45_f45_mg37" compset="I1850Clm60FatesNocomp" testmods="clm/FatesColdClm60Cam7LndTuningMode">
     <machines>
       <machine name="betzy" compiler="gnu" category="aux_clm_noresm"/>
+      <machine name="olivia" compiler="gnu" category="aux_clm_noresm"/>
     </machines>
     <options>
       <option name="wallclock">00:30:00</option>
@@ -5015,6 +5042,7 @@
   <test name="ERS_D_Ld5" grid="f45_f45_mg37" compset="I2000Clm60Fates" testmods="clm/FatesColdMeganNoComp">
     <machines>
       <machine name="betzy" compiler="intel" category="aux_clm_noresm"/>
+      <machine name="olivia" compiler="intel" category="aux_clm_noresm"/>
     </machines>
     <options>
       <option name="wallclock">00:32:00</option>
@@ -5024,6 +5052,7 @@
   <test name="ERS_D_Ld5" grid="f45_f45_mg37" compset="I2000Clm60Fates" testmods="clm/FatesColdDryDepNoComp">
     <machines>
       <machine name="betzy" compiler="gnu" category="aux_clm_noresm"/>
+      <machine name="olivia" compiler="intel" category="aux_clm_noresm"/>
     </machines>
     <options>
       <option name="wallclock">00:32:00</option>
@@ -5033,6 +5062,7 @@
   <test name="ERI_D_Ld20" grid="ne16pg3_ne16pg3_mtn14" compset="I2000Clm60FatesRs" testmods="clm/FatesColdNormanNoCompFixedBioGeo">
     <machines>
       <machine name="betzy"   compiler="gnu" category="aux_clm_noresm"/>
+      <machine name="olivia"   compiler="gnu" category="aux_clm_noresm"/>
     </machines>
     <options>
       <option name="wallclock">00:30:00</option>
@@ -5042,6 +5072,7 @@
   <test name="SMS_Ld1" grid="f45_f45_mg37" compset="I1850Clm60FatesNoComp" testmods="clm/FatesColdReducedOutput">
     <machines>
       <machine name="betzy" compiler="gnu" category="aux_clm_noresm"/>
+      <machine name="olivia" compiler="gnu" category="aux_clm_noresm"/>
     </machines>
     <options>
       <option name="wallclock">00:30:00</option>
@@ -5055,6 +5086,7 @@
   <test name="ERP_D" grid="f45_f45_mg37" compset="I2000Clm60Fates" testmods="clm/FatesCold">
     <machines>
       <machine name="betzy" compiler="intel" category="aux_clm_noresm"/>
+      <machine name="olivia" compiler="intel" category="aux_clm_noresm"/>
     </machines>
     <options>
       <option name="wallclock">00:50:00</option>
@@ -5064,6 +5096,7 @@
   <test name="ERS_D_Ld5" grid="5x5_amazon" compset="I2000Clm60FatesRs" testmods="clm/FatesCold">
     <machines>
       <machine name="betzy" compiler="intel" category="aux_clm_noresm"/>
+      <machine name="olivia" compiler="intel" category="aux_clm_noresm"/>
     </machines>
     <options>
       <option name="wallclock">00:10:00</option>
@@ -5073,7 +5106,7 @@
 
   <test name="ERI_D_Ld80_P1024" grid="ne16pg3_ne16pg3_mtn14" compset="I2000Clm60Fates" testmods="clm/FatesCold">
     <machines>
-      <machine name="betzy" compiler="gnu" category="aux_clm_noresm"/>
+      <machine name="olivia" compiler="gnu" category="aux_clm_noresm"/>
     </machines>
     <options>
       <option name="wallclock">00:50:00</option>
@@ -5086,6 +5119,7 @@
   <test name="ERP_D_Ld16" grid="f45_f45_mg37" compset="I2000Clm60Sp" testmods="clm/midDecStart">
     <machines>
       <machine name="betzy" compiler="gnu" category="aux_clm_noresm"/>
+      <machine name="olivia" compiler="gnu" category="aux_clm_noresm"/>
     </machines>
     <options>
       <option name="wallclock">00:29:00</option>
@@ -5095,6 +5129,7 @@
   <test name="ERP_D_Ld5" grid="f45_f45_mg37" compset="IHistClm60Sp" testmods="clm/default--clm/nofireemis">
     <machines>
       <machine name="betzy" compiler="intel" category="aux_clm_noresm"/>
+      <machine name="olivia" compiler="intel" category="aux_clm_noresm"/>
     </machines>
     <options>
       <option name="wallclock">00:20:00</option>
@@ -5104,6 +5139,7 @@
   <test name="ERS_D" grid="f45_f45_mg37" compset="I1850Clm60Sp" testmods="clm/default--clm/nofireemis">
     <machines>
       <machine name="betzy" compiler="gnu" category="aux_clm_noresm"/>
+       <machine name="olivia" compiler="gnu" category="aux_clm_noresm"/>
     </machines>
     <options>
       <option name="wallclock">00:20:00</option>
@@ -5116,6 +5152,7 @@
   <test name="ERI_D_Ld9" grid="f45_f45_mg37" compset="I1850Clm60Bgc" testmods="clm/default">
     <machines>
       <machine name="betzy" compiler="intel" category="aux_clm_noresm"/>
+      <machine name="olivia" compiler="intel" category="aux_clm_noresm"/>
     </machines>
     <options>
       <option name="wallclock">00:20:00</option>
@@ -5126,6 +5163,7 @@
   <test name="ERP_D_Ld10" grid="f45_f45_mg37" compset="IHistClm60Bgc" testmods="clm/midDecStart">
     <machines>
       <machine name="betzy" compiler="intel" category="aux_clm_noresm"/>
+      <machine name="olivia" compiler="intel" category="aux_clm_noresm"/>
     </machines>
     <options>
       <option name="wallclock">00:29:00</option>
@@ -5136,6 +5174,7 @@
   <test name="ERP_Ld761" grid="f45_f45_mg37" compset="IHistClm60Bgc" testmods="clm/monthly">
     <machines>
       <machine name="betzy" compiler="gnu" category="aux_clm_noresm"/>
+      <machine name="olivia" compiler="gnu" category="aux_clm_noresm"/>
     </machines>
     <options>
       <option name="wallclock">00:50:00</option>
@@ -5148,6 +5187,7 @@
   <test name="ERI_Ld9" grid="f45_f45_mg37" compset="I2000Clm60BgcCrop" testmods="clm/default">
     <machines>
       <machine name="betzy" compiler="gnu" category="aux_clm_noresm"/>
+      <machine name="olivia" compiler="gnu" category="aux_clm_noresm"/>
     </machines>
     <options>
       <option name="wallclock">00:20:00</option>
@@ -5158,6 +5198,7 @@
   <test name="ERP_D_Ld10" grid="f45_f45_mg37" compset="IHistClm60BgcCrop" testmods="clm/default">
     <machines>
       <machine name="betzy" compiler="intel" category="aux_clm_noresm"/>
+      <machine name="olivia" compiler="intel" category="aux_clm_noresm"/>
     </machines>
     <options>
       <option name="wallclock">00:50:00</option>
@@ -5165,9 +5206,10 @@
     </options>
   </test>
 
-  <test name="ERP_D_Ld3" grid="f45_f45_mg37" compset="I2000Clm60BgcCrop" testmods="clm/coldStart">
+  <test name="ERR_D_Ld5" grid="f45_f45_mg37" compset="I2000Clm60BgcCrop" testmods="clm/coldStart">
     <machines>
       <machine name="betzy" compiler="intel" category="aux_clm_noresm"/>
+      <machine name="olivia" compiler="intel" category="aux_clm_noresm"/>
     </machines>
     <options>
       <option name="wallclock">00:20:00</option>
@@ -5178,6 +5220,7 @@
   <test name="ERP_D_Ld5" grid="f45_f45_mg37" compset="I2000Clm60BgcCrop" testmods="clm/irrig_spunup">
     <machines>
       <machine name="betzy" compiler="intel" category="aux_clm_noresm"/>
+      <machine name="olivia" compiler="intel" category="aux_clm_noresm"/>
     </machines>
     <options>
       <option name="wallclock">00:20:00</option>
@@ -5188,6 +5231,7 @@
   <test name="SMS_Ld761" grid="f19_g17" compset="I2000Clm60BgcCrop" testmods="clm/cropMonthOutput">
     <machines>
       <machine name="betzy" compiler="intel" category="aux_clm_noresm"/>
+      <machine name="olivia" compiler="intel" category="aux_clm_noresm"/>
     </machines>
     <options>
       <option name="wallclock">00:50:00</option>
@@ -5195,27 +5239,41 @@
     </options>
   </test>
 
-  <test name="ERP_D_Ld10" grid="ne30pg3_ne30pg3_mtn14" compset="I1850Clm60BgcCrop" testmods="clm/ADspinup">
+  <test name="ERR_Ld10" grid="ne30pg3_ne30pg3_mtn14" compset="I1850Clm60BgcCrop" testmods="clm/ADspinup">
     <machines>
       <machine name="betzy" compiler="intel" category="aux_clm_noresm"/>
-    </machines>
-    <options>
-      <option name="wallclock">00:20:00</option>
-      <option name="comment">""</option>
-    </options>
-  </test>
-
-  <!-- single point non-FATES -->
-
-  <test name="ERS_D_Ld5" grid="1x1_mexicocityMEX" compset="I1PtClm60SpRs" testmods="clm/CLM1PTStartDate">
-    <machines>
-      <machine name="betzy" compiler="intel" category="aux_clm_noresm"/>
+      <machine name="olivia" compiler="intel" category="aux_clm_noresm"/>
     </machines>
     <options>
       <option name="wallclock">00:40:00</option>
       <option name="comment">""</option>
     </options>
   </test>
+
+  <!-- single point -->
+
+  <test name="ERS_D_Ld5" grid="1x1_mexicocityMEX" compset="I1PtClm60SpRs" testmods="clm/CLM1PTStartDate">
+    <machines>
+      <machine name="betzy" compiler="intel" category="aux_clm_noresm"/>
+      <machine name="olivia" compiler="intel" category="aux_clm_noresm"/>
+    </machines>
+    <options>
+      <option name="wallclock">00:40:00</option>
+      <option name="comment">""</option>
+    </options>
+  </test>
+
+  <test name="ERS_Ld30" grid="1x1_brazil" compset="I2000Clm60Fates" testmods="clm/FatesCold">
+    <machines>
+      <machine name="betzy" compiler="intel" category="aux_clm_noresm"/>
+      <machine name="olivia" compiler="intel" category="aux_clm_noresm"/>
+    </machines>
+    <options>
+      <option name="wallclock">00:40:00</option>
+      <option name="comment">""</option>
+    </options>
+  </test>
+
 
   <test name="ERS" grid="f09_f09_mtn14" compset="I2000Clm60Bgc" testmods="clm/lnd2rof_tracers">
     <machines>

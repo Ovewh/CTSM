@@ -28,7 +28,7 @@
 [submodule "fates"]
 path = src/fates
 url = https://github.com/NorESMhub/fates
-fxtag = sci.1.88.6_api.42.0.0_nor_sci5_api1
+fxtag = sci.1.88.6_api.42.0.0_nor_sci2_api2
 fxrequired = AlwaysRequired
 # Standard Fork to compare to with "git fleximod test" to ensure personal forks aren't committed
 fxDONOTUSEurl = https://github.com/NorESMhub/fates
@@ -68,7 +68,7 @@ fxDONOTUSEurl = https://github.com/ESCOMP/mizuRoute
 [submodule "ccs_config"]
 path = ccs_config
 url = https://github.com/NorESMhub/ccs_config_noresm.git
-fxtag = ccs_config_noresm0.0.62
+fxtag = ccs_config_noresm0.0.65
 fxrequired = ToplevelRequired
 # Standard Fork to compare to with "git fleximod test" to ensure personal forks aren't committed
 fxDONOTUSEurl = https://github.com/NorESMhub/ccs_config_noresm
@@ -76,7 +76,7 @@ fxDONOTUSEurl = https://github.com/NorESMhub/ccs_config_noresm
 [submodule "cime"]
 path = cime
 url = https://github.com/NorESMhub/cime
-fxtag = cime6.1.143_noresm_v1
+fxtag = cime6.1.173_noresm_v0
 fxrequired = ToplevelRequired
 # Standard Fork to compare to with "git fleximod test" to ensure personal forks aren't committed
 fxDONOTUSEurl = https://github.com/NorESMhub/cime
@@ -84,7 +84,7 @@ fxDONOTUSEurl = https://github.com/NorESMhub/cime
 [submodule "cmeps"]
 path = components/cmeps
 url = https://github.com/NorESMhub/CMEPS.git
-fxtag = cmeps1.1.23_noresm_v1
+fxtag = cmeps1.1.41_noresm_v0
 fxrequired = ToplevelRequired
 # Standard Fork to compare to with "git fleximod test" to ensure personal forks aren't committed
 fxDONOTUSEurl = https://github.com/NorESMhub/CMEPS.git
@@ -92,7 +92,7 @@ fxDONOTUSEurl = https://github.com/NorESMhub/CMEPS.git
 [submodule "cdeps"]
 path = components/cdeps
 url = https://github.com/NorESMhub/CDEPS.git
-fxtag = cdeps1.0.88_noresm_v1
+fxtag = cdeps1.0.88_noresm_v2
 fxrequired = ToplevelRequired
 # Standard Fork to compare to with "git fleximod test" to ensure personal forks aren't committed
 fxDONOTUSEurl = https://github.com/NorESMhub/CDEPS.git
