@@ -602,8 +602,8 @@ attributes from the config_cache.xml file (with keys converted to upper-case).
      for the CLM2 data in the CESM distribution -->
 <!-- Plant function types (relative to {csmdata}) -->
 <paramfile phys="clm6_0" >lnd/clm2/paramdata/ctsm60_params.c260303.nc</paramfile>
-<paramfile phys="clm6_0" use_fates=".true.">lnd/clm2/paramdata/ctsm60_params.noresm.c260406.nc</paramfile>
 <paramfile phys="clm6_0" lnd_tuning_mode="clm6_0_cam7.0">lnd/clm2/paramdata/ctsm60-cam70_params.c260305.nc</paramfile>
+<paramfile phys="clm6_0" use_fates=".true.">lnd/clm2/paramdata/ctsm60_params.noresm.c260406.nc</paramfile>
 <paramfile phys="clm5_0" >lnd/clm2/paramdata/clm50_params.c260305.nc</paramfile>
 <paramfile phys="clm4_5" >lnd/clm2/paramdata/clm45_params.c260305.nc</paramfile>
 
@@ -612,13 +612,8 @@ attributes from the config_cache.xml file (with keys converted to upper-case).
 <!-- path is relative to the land root (ie the path to CTSM)            -->
 <!-- ================================================================== -->
 
-<<<<<<< HEAD
-<fates_paramfile>src/fates/parameter_files/fates_params_noresm.json</fates_paramfile>
+<fates_paramfile>src/fates/parameter_files/tmp_params.json</fates_paramfile>
 
-=======
-<!-- <fates_paramfile>lnd/clm2/paramdata/fates_params_api.36.1.0_14pft_c241003.nc</fates_paramfile> -->
-<fates_paramfile>lnd/clm2/paramdata/fates_params_sci.1.88.6_api.42.0.0_14pft_nor_sci2_api2_c260415.nc</fates_paramfile>
->>>>>>> nor/noresm
 <!-- ================================================================== -->
 <!-- Default surface roughness parameterization                         -->
 <!-- ================================================================== -->

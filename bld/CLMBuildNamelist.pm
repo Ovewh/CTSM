@@ -778,7 +778,7 @@ sub setup_cmdl_mask {
 }
 
 #-------------------------------------------------------------------------------
-sub setup_cmdl_fates_mode {rily restricted access to some systems (including login nodes) while we apply security updates and perform necessary 
+sub setup_cmdl_fates_mode {
   #
   # call this at least after crop check is called
   #
