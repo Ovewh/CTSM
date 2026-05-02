@@ -5127,7 +5127,16 @@
       <option name="comment">"Will fail in mosart, but check for other fails"</option>
     </options>
   </test>
-
+  <test name="ERS_D_Ld30" grid="f45_f45_mg37" compset="I2000Clm60FatesRs" testmods="clm/FatesColdPRT2_suplnAll">
+    <machines>
+      <machine name="betzy" compiler="gnu" category="aux_clm_noresm"/>
+      <machine name="olivia" compiler="intel" category="aux_clm_noresm"/>
+    </machines>
+    <options>
+      <option name="wallclock">00:40:00</option>
+      <option name="comment">Exact restart debug test covering Fates CNP nutrients mode with suplnitro set to ALL.</option>
+    </options>
+  </test>
   <!-- non-FATES SP tests -->
 
   <test name="ERP_D_Ld16" grid="f45_f45_mg37" compset="I2000Clm60Sp" testmods="clm/midDecStart">
@@ -5287,7 +5296,6 @@
       <option name="comment">""</option>
     </options>
   </test>
-
 
   <test name="ERS" grid="f09_f09_mtn14" compset="I2000Clm60Bgc" testmods="clm/lnd2rof_tracers">
     <machines>

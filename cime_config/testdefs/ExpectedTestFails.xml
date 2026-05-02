@@ -328,4 +328,18 @@
     </phase>
   </test>
 
+  <test name="ERS_Ld11_P1536.ne30pg3_ne30pg3_mtn14.I1850Clm60FatesNocompSpinup.betzy_intel.clm-FatesIniSpinup">
+    <phase name="RUN">
+      <status>FAIL</status>
+      <issue>NorESMhub/CTSM/#217</issue>
+    </phase>
+  </test>
+
+  <test name="ERS_Ld11.ne30pg3_ne30pg3_mtn14.I1850Clm60FatesNocompSpinup.olivia_intel.clm-FatesIniSpinup">
+    <phase name="RUN">
+      <status>FAIL</status>
+      <issue>NorESMhub/CTSM/#217</issue>
+    </phase>
+  </test>
+
 </expectedFails>
