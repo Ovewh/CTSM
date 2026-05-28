@@ -1822,19 +1822,19 @@ attributes from the config_cache.xml file (with keys converted to upper-case).
 <!--ne16-->
 <!-- piControl and historical CRUJRA-->
 <fates_finidat hgrid="ne16np4.pg3" mask="tnx1v4" bgc_mode="fates_ncfb" esm="noresm" sim_year_range="constant"
-               lnd_tuning_mode="clm6_0_CRUJRA2024" phys="clm6_0" glc_nec="10"
+               lnd_tuning_mode="clm6_0_CRUJRA2024" phys="clm6_0" glc_nec="10" sim_year="1850"
 >lnd/clm2/initdata_esmf/ctsm5.4/NorESM/i1850.ne16pg3_tn14.ctsm5.4.036_noresm_v0.CPLHIST_postADspinup_olv.2026-05-15.clm2.r.0801-01-01-00000.nc</fates_finidat>
 
-<fates_finidat hgrid="ne16np4.pg3" mask="tnx1v4" sim_year="1850" bgc_mode="fates_ncfb" esm="noresm" sim_year_range="1850-2000"
+<fates_finidat hgrid="ne16np4.pg3" mask="tnx1v4" bgc_mode="fates_ncfb" esm="noresm" sim_year_range="1850-2000"
                lnd_tuning_mode="clm6_0_CRUJRA2024" phys="clm6_0" glc_nec="10"  ic_ymd="18500101"
 >lnd/clm2/initdata_esmf/ctsm5.4/NorESM/i1850.ne16pg3_tn14.ctsm5.4.036_noresm_v0.CPLHIST_postADspinup_olv.2026-05-15.clm2.r.0801-01-01-00000.nc</fates_finidat>
 
 <!-- piControl and historical with CAM7-->
 <fates_finidat hgrid="ne16np4.pg3" mask="tnx1v4" bgc_mode="fates_ncfb" esm="noresm" sim_year_range="constant"
-               lnd_tuning_mode="clm6_0_cam7.0" phys="clm6_0" glc_nec="10"
+               lnd_tuning_mode="clm6_0_cam7.0" phys="clm6_0" glc_nec="10" sim_year="1850"
 >lnd/clm2/initdata_esmf/ctsm5.4/NorESM/i1850.ne16pg3_tn14.ctsm5.4.036_noresm_v0.CPLHIST_postADspinup_olv.2026-05-15.clm2.r.0801-01-01-00000.nc</fates_finidat>
 
-<fates_finidat hgrid="ne16np4.pg3" mask="tnx1v4" sim_year="1850" bgc_mode="fates_ncfb" esm="noresm" sim_year_range="1850-2000"
+<fates_finidat hgrid="ne16np4.pg3" mask="tnx1v4"  bgc_mode="fates_ncfb" esm="noresm" sim_year_range="1850-2000"
                lnd_tuning_mode="clm6_0_cam7.0" phys="clm6_0" glc_nec="10"  ic_ymd="18500101"
 >lnd/clm2/initdata_esmf/ctsm5.4/NorESM/i1850.ne16pg3_tn14.ctsm5.4.036_noresm_v0.CPLHIST_postADspinup_olv.2026-05-15.clm2.r.0801-01-01-00000.nc</fates_finidat>
 
@@ -2811,9 +2811,12 @@ lnd/clm2/surfdata_esmf/NEON/ctsm5.4.0/surfdata_1x1_NEON_TOOL_hist_2000_78pfts_c2
 <!-- Defaults for dynamic subgrid               -->
 <!-- (some other defaults for dynamic subgrid   -->
 <!-- are set in the BuildNamelist code)         -->
+<!-- for now, fates can not start with transient things -->
 <!-- =========================================  -->
 <do_transient_lakes>.false.</do_transient_lakes>
+<do_transient_lakes use_fates=".true.">.false.</do_transient_lakes>
 <do_transient_urban>.false.</do_transient_urban>
+<do_transient_urban use_fates=".true">.false.</do_transient_urban>
 <reset_dynbal_baselines>.false.</reset_dynbal_baselines>
 <vars_1dwt_w_time do_transient_pfts=".true.">.true.</vars_1dwt_w_time>
 <vars_1dwt_w_time do_transient_crops=".true.">.true.</vars_1dwt_w_time>
