@@ -342,4 +342,13 @@
     </phase>
   </test>
 
+
+
+  <test name="ERS_D_Ld5.ne30pg3_ne30pg3_mtn14.NI1850Clm60NorSpinup.olivia_intel.clm-FatesNoresmSpinupAllVars">
+    <phase name="COMPARE_base_rest">
+      <status>FAIL</status>
+      <issue>NorESMhub/CTSM/#217</issue>
+    </phase>
+  </test>
+
 </expectedFails>

@@ -1,3 +1,4 @@
+!!   USES THE DEFAULT INITIALIZATION FILE SPECIFIED IN bld/namelist_files/namelist_defaults_ctsm.xml
 hist_fincl1 += 'DRYDEPV_O3','DRYDEPV_NO2',
                'DRYDEPV_HNO3','DRYDEPV_NO','DRYDEPV_HO2NO2','DRYDEPV_CH3OOH',
                'DRYDEPV_CH2O','DRYDEPV_CO','DRYDEPV_H2O2','DRYDEPV_CH3COOOH',
@@ -9,6 +10,5 @@ hist_fincl1 += 'DRYDEPV_O3','DRYDEPV_NO2',
                'DRYDEPV_ALKOOH','DRYDEPV_MEKOOH','DRYDEPV_TOLOOH','DRYDEPV_TERPOOH',
                'DRYDEPV_CH3COOH','DRYDEPV_CB1','DRYDEPV_CB2','DRYDEPV_OC1','DRYDEPV_OC2',
                'DRYDEPV_SOA','DRYDEPV_SO2','DRYDEPV_SO4','DRYDEPV_NH3','DRYDEPV_NH4NO3'
-hist_mfilt        = 1
-hist_nhtfrq       = -24
-
+hist_empty_htapes = .true.
+hist_ndens = 1
