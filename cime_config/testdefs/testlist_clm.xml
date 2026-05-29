@@ -5035,7 +5035,7 @@
     </options>
   </test>
 
-  <test name="SMS_D_Ld1000_P1536" grid="ne30pg3_ne30pg3_mtn14" compset="NI1850Clm60NorSpinup" testmods="clm/FatesNoresmSpinup">
+  <test name="SMS_D_Ld1000_P1536" grid="ne30pg3_ne30pg3_mtn14" compset="NI1850Clm60NorSpinup" testmods="clm/FatesColdNorSpinupAD">
     <machines>
       <machine name="betzy" compiler="gnu" category="aux_clm_noresm"/>
     </machines>
