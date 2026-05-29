@@ -270,7 +270,7 @@ Caveats:
   <entry id="CLM_BLDNML_OPTS">
     <type>char</type>
     <default_value></default_value>
-    <values>
+    <values  match="last">
       <!--- All versions with DATM -->
       <value compset="DATM[^_]*_CLM[^_]*%SP"       >-bgc sp</value>
       <value compset="DATM[^_]*_CLM[^_]*BGC"       >-bgc bgc</value>
@@ -285,10 +285,12 @@ Caveats:
         When coupled to CAM - expect CAM to determine these drv_flds settings
         See issue #2713 for more information on this.
       -->
-      <value compset="CAM[^_]*_CLM[^_]*%SP"       >--bgc sp --no-megan --no-drydep --no-fire_emis</value>
-      <value compset="CAM[^_]*_CLM[^_]*BGC"       >--bgc bgc --no-megan --no-drydep --no-fire_emis</value>
-      <value compset="CAM[^_]*_CLM[^_]*BGC-CROP"  >--bgc bgc --crop --no-megan --no-drydep --no-fire_emis</value>
-      <value compset="CAM[^_]*_CLM[^_]*FATES" >--bgc fates --no-megan --no-drydep --no-fire_emis</value>
+      <value compset="CAM[^_]*_CLM[^_]*%SP"         >--bgc sp --no-megan --no-drydep --no-fire_emis</value>
+      <value compset="CAM[^_]*_CLM[^_]*BGC"         >--bgc bgc --no-megan --no-drydep --no-fire_emis</value>
+      <value compset="CAM[^_]*_CLM[^_]*BGC-CROP"    >--bgc bgc --crop --no-megan --no-drydep --no-fire_emis</value>
+      <value compset="CAM[^_]*_CLM[^_]*FATES"       >--bgc fates --no-megan --no-drydep --no-fire_emis</value>
+      <value compset="DATM[^_]*_CLM[^_]*FATES-SP"   >--bgc fates_sp --no-megan --no-drydep --no-fire_emis</value>
+      <value compset="DATM[^_]*_CLM[^_]*FATES-NCFB" >--bgc fates_ncfb --no-megan --no-drydep --no-fire_emis</value>
       <!-- ======================================= End of Coupled to CAM Options ===============================  -->
 
       <!-- Options specific for CLM4.5 -->
