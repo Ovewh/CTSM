@@ -880,7 +880,6 @@ sub setup_cmdl_bgc {
 
   $val = $opts->{$var};
   $nl_flags->{'bgc_mode'} = $val;
-  $log->message("MVD: def $var $val");
   my $var = "bgc_mode";
   if ( $nl_flags->{$var} eq "default" ) {
      $nl_flags->{$var} = $defaults->get_value($var);
@@ -894,6 +893,8 @@ sub setup_cmdl_bgc {
   $log->verbose_message("Using $nl_flags->{$var} for bgc.");
 
   # now set the actual name list variables based on the bgc alias
+  # some fates variables will not get set as namelist vars but will be availible in nl_flags 
+  # for backwards comaptibility and making default's attributes work
   if ($nl_flags->{$var} eq "bgc" ) {
      $nl_flags->{'use_cn'} = ".true.";
      $nl_flags->{'use_fates'} = ".false.";
@@ -958,7 +959,6 @@ sub setup_cmdl_bgc {
     
      $group = $definition->get_group_name($var);
      $nl->set_variable_value($group, $var, $val);
-     $log->message("MVD: def $var $val");
      if (  ! $definition->is_valid_value( $var, $val ) ) {
         my @valid_values   = $definition->get_valid_values( $var );
         $log->fatal_error("$var has a value ($val) that is NOT valid. Valid values are: @valid_values");
@@ -1469,7 +1469,6 @@ sub setup_cmdl_run_type {
   }
   if ( ! defined $set ) {
     my $sim_year = $nl_flags->{'sim_year'};
-    $log->message("MVD: $st_year $sim_year");
      add_default($opts, $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl, $var,
                  'use_cndv'=>$nl_flags->{'use_cndv'}, 'use_fates'=>$nl_flags->{'use_fates'}, 'bgc_mode'=>$nl_flags->{'fates_ncfb'},
                  'sim_year'=>$st_year, 'sim_year_range'=>$nl_flags->{'sim_year_range'}, 'esm'=>$nl_flags->{'esm'},
@@ -2730,11 +2729,7 @@ sub setup_logic_initial_conditions {
 
 
   my %fates_settings;
-  my $cstrt=$nl_flags->{'clm_start_type'};
-  my $strc=$nl_flags->{'start_type'};
-  $log->message("MVD:   I AM outside FATES BLOCK   $finidat $cstrt $strc");
   if ( (not defined $finidat) && &value_is_true($nl_flags->{"use_fates"})) {
-     $log->message("MVD:   I AM IN FATES BLOCK");
      $fates_settings{'hgrid'}           = $nl_flags->{'res'};
      $fates_settings{'mask'}           = $nl_flags->{'mask'};
      $fates_settings{'sim_year'}        = $nl_flags->{'sim_year'};
@@ -2747,22 +2742,15 @@ sub setup_logic_initial_conditions {
      $fates_settings{'ic_ymd'}         = $nl->get_value('start_ymd');
      $fates_settings{'ic_md'}         = $nl->get_value('start_ymd');
      $fates_settings{'nofail'} = 1;
-     #$fates_settings{'val'} = "' '";
      add_default($opts,  $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl, "fates_finidat", %fates_settings );
      my $finidatf = $nl->get_value("fates_finidat");
      if ( (defined $finidatf) && ( ! string_is_undef_or_empty($finidatf))) {
         $finidat = $finidatf;
         add_default($opts,  $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl,
                 $var, 'val'=>$finidatf);
-        $log->message("MVD: GOT FINIDAT");
      } else { 
         add_default($opts,  $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl,
                 $var, 'val'=>"' '", 'no_abspath'=>1);
-    }
-     $log->message("MVD:  $finidatf");
-    foreach my $key (keys %fates_settings) {
-        my $value = $fates_settings{$key};
-        $log->message("MVD: $key is $value\n");
     }
   }
   my %settings;
@@ -5067,21 +5055,6 @@ sub setup_logic_fates {
                     'use_fates_sp'=>$nl_flags->{'use_fates_sp'} );
         add_default($opts, $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl, 'use_fates_dbh_init', 'use_fates'=>$nl_flags->{'use_fates'},
                     'use_fates_nocomp'=>$nl->get_value('use_fates_nocomp'), 'esm'=>$nl_flags->{'esm'});
-                    my $msg = "DUMP: fates_sp: ";
-                    $msg .=  $nl_flags->{'use_fates_sp'};
-                    $msg .= " lupft: ";
-                    $msg .= $nl->get_value('use_fates_lupft');
-                    $msg .= " potveg: ";
-                    $msg .= $nl->get_value('use_fates_potentialveg');
-                    $msg .= " lulogic: ";
-                    $msg .= $nl->get_value('fates_lu_transition_logic');
-                    $msg .= " harmod: ";
-                    $msg .= $nl->get_value('fates_harvest_mode');
-                    $msg .= " esm: ";
-                    $msg .=  $nl_flags->{'esm'};
-                    $msg .= " hgrid: ";
-                    $msg .= $nl_flags->{'res'};
-                    $log->message($msg);
 
         # For FATES SP mode make sure no-competetiion, and fixed-biogeography are also set
         # And also check for other settings that can't be trigged on as well
