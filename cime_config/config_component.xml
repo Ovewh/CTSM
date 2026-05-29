@@ -52,7 +52,7 @@
     <valid_values>cesm,noresm</valid_values>
     <default_value>cesm</default_value>
     <values>
-      <value compset="_CLM60%[^_]*NORESM[%_]" >noresm</value>
+      <value compset="_CLM60%[^_].*NORESM[%_]" >noresm</value>
     </values>
     <group>run_component_ctsm</group>
     <file>env_run.xml</file>
@@ -289,8 +289,8 @@ Caveats:
       <value compset="CAM[^_]*_CLM[^_]*BGC"         >--bgc bgc --no-megan --no-drydep --no-fire_emis</value>
       <value compset="CAM[^_]*_CLM[^_]*BGC-CROP"    >--bgc bgc --crop --no-megan --no-drydep --no-fire_emis</value>
       <value compset="CAM[^_]*_CLM[^_]*FATES"       >--bgc fates --no-megan --no-drydep --no-fire_emis</value>
-      <value compset="DATM[^_]*_CLM[^_]*FATES-SP"   >--bgc fates_sp --no-megan --no-drydep --no-fire_emis</value>
-      <value compset="DATM[^_]*_CLM[^_]*FATES-NCFB" >--bgc fates_ncfb --no-megan --no-drydep --no-fire_emis</value>
+      <value compset="CAM[^_]*_CLM[^_]*FATES-SP"   >--bgc fates_sp --no-megan --no-drydep --no-fire_emis</value>
+      <value compset="CAM[^_]*_CLM[^_]*FATES-NCFB" >--bgc fates_ncfb --no-megan --no-drydep --no-fire_emis</value>
       <!-- ======================================= End of Coupled to CAM Options ===============================  -->
 
       <!-- Options specific for CLM4.5 -->

@@ -3887,7 +3887,7 @@ sub setup_logic_c_isotope {
   &add_logical_to_nl_flags( $nl_flags, $nl, "use_c14" );
   my $use_c13 = $nl->get_value('use_c13');
   my $use_c14 = $nl->get_value('use_c14');
-  if ( $nl_flags->{'bgc_mode'} ne "sp" && ($nl_flags->{'bgc_mode'} ne "fates" || $nl_flags->{'bgc_mode'} ne "fates_sp" || $nl_flags->{'bgc_mode'} ne "fates_ncfb")) {
+  if ( $nl_flags->{'bgc_mode'} ne "sp" && ( ! &value_is_true($nl_flags->{'use_fates'}))) {
     if ( $nl_flags->{'bgc_mode'} ne "bgc" ) {
       if ( &value_is_true($use_c13) ) {
         $log->warning("use_c13 is ONLY scientifically validated with the bgc=BGC configuration" );
