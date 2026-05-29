@@ -23,7 +23,7 @@ attributes from the config_cache.xml file (with keys converted to upper-case).
       'NOA','O3','O3S','ONITR','PAN','POOH','ROOH','SO2','SOAG','XOOH'
 </drydep_list>
 
-<drydep_list use_fates = ".true." esm="noresm">'O3','NO2','HNO3','NO','HO2NO2',
+<drydep_list use_fates=".true." esm="noresm">'O3','NO2','HNO3','NO','HO2NO2',
              'CH3OOH','CH2O','CO','H2O2','CH3COOOH',
              'PAN','MPAN','C2H5OOH','ONIT','POOH',
              'C3H7OOH','ROOH','CH3COCHO','CH3COCH3',
