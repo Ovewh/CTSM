@@ -405,12 +405,12 @@
 
   <compset>
      <alias>I1850Clm60BgcNoAnthro</alias>
-     <lname>1850_DATM%GSWP3v1_CLM60%BGC-NOANTHRO_SICE_SOCN_RTM_SGLC_SWAV</lname>
+     <lname>1850_DATM%GSWP3v1_CLM60%BGC%NOANTHRO_SICE_SOCN_RTM_SGLC_SWAV</lname>
      <science_support grid="f09_g17"/>
    </compset>
   <compset>
      <alias>I1850Clm60BgcCrujraNoAnthro</alias>
-     <lname>1850_DATM%CRUJRA2024b_CLM60%BGC-NOANTHRO_SICE_SOCN_RTM_SGLC_SWAV</lname>
+     <lname>1850_DATM%CRUJRA2024b_CLM60%BGC%NOANTHRO_SICE_SOCN_RTM_SGLC_SWAV</lname>
      <science_support grid="f09_t232"/>
    </compset>
 
@@ -427,7 +427,7 @@
 
   <compset>
      <alias>I1850Clm50BgcNoAnthro</alias>
-     <lname>1850_DATM%GSWP3v1_CLM50%BGC-NOANTHRO_SICE_SOCN_RTM_SGLC_SWAV</lname>
+     <lname>1850_DATM%GSWP3v1_CLM50%BGC%NOANTHRO_SICE_SOCN_RTM_SGLC_SWAV</lname>
    </compset>
 
   <compset>
