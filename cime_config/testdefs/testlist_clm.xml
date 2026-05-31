@@ -4953,7 +4953,7 @@
   <test name="ERI_D_Ld30" grid="f45_f45_mg37" compset="NI1850Clm60FatesSp" testmods="clm/FatesColdClm60Cam7LndTuningMode">
     <machines>
       <machine name="betzy" compiler="gnu" category="aux_clm_noresm"/>
-      <machine name="olivia" compiler="gnu" category="aux_clm_noresm"/>
+      <machine name="olivia" compiler="intel" category="aux_clm_noresm"/>
     </machines>
     <options>
       <option name="wallclock">00:30:00</option>
@@ -4973,7 +4973,7 @@
   <test name="SMS_Ld1" grid="f45_f45_mg37" compset="I1850Clm60FatesSp" testmods="clm/FatesColdReducedOutput">
     <machines>
       <machine name="betzy" compiler="gnu" category="aux_clm_noresm"/>
-      <machine name="olivia" compiler="gnu" category="aux_clm_noresm"/>
+      <machine name="olivia" compiler="intel" category="aux_clm_noresm"/>
     </machines>
     <options>
       <option name="wallclock">00:30:00</option>
@@ -5075,7 +5075,7 @@
   <test name="ERI_D_Ld20" grid="f45_f45_mg37" compset="I1850Clm60FatesNcfb" testmods="clm/FatesColdClm60Cam7LndTuningMode">
     <machines>
       <machine name="betzy" compiler="gnu" category="aux_clm_noresm"/>
-      <machine name="olivia" compiler="gnu" category="aux_clm_noresm"/>
+      <machine name="olivia" compiler="intel" category="aux_clm_noresm"/>
     </machines>
     <options>
       <option name="wallclock">00:30:00</option>
@@ -5129,7 +5129,7 @@
 
   <test name="ERI_D_Ld10_P1024" grid="ne16pg3_ne16pg3_mtn14" compset="NI1850Clm60Fates" testmods="clm/FatesColdNoresm">
     <machines>
-      <machine name="olivia" compiler="gnu" category="aux_clm_noresm"/>
+      <machine name="olivia" compiler="intel" category="aux_clm_noresm"/>
     </machines>
     <options>
       <option name="wallclock">00:50:00</option>
@@ -5219,7 +5219,7 @@
   <test name="ERI_Ld9" grid="f45_f45_mg37" compset="I2000Clm60BgcCrop" testmods="clm/default">
     <machines>
       <machine name="betzy" compiler="gnu" category="aux_clm_noresm"/>
-      <machine name="olivia" compiler="gnu" category="aux_clm_noresm"/>
+      <machine name="olivia" compiler="intel" category="aux_clm_noresm"/>
     </machines>
     <options>
       <option name="wallclock">00:20:00</option>
