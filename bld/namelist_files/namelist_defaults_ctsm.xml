@@ -224,7 +224,7 @@ attributes from the config_cache.xml file (with keys converted to upper-case).
 <!-- Albedo for glaciers -->
 <albice               >0.50,0.30</albice>
 <albice phys="clm4_5" >0.60,0.40</albice>
-<albice phys="clm6_0" >0.60,0.40</albice>
+<albice phys="clm6_0" esm="noresm">0.60,0.40</albice>
 <!-- Default urban air conditioning/heating and wasteheat -->
 <urban_hac               >ON_WASTEHEAT</urban_hac>
 <urban_hac phys="clm4_5" >ON</urban_hac>
@@ -556,10 +556,11 @@ attributes from the config_cache.xml file (with keys converted to upper-case).
 <snow_thermal_cond_method phys="clm6_0">Sturm1997</snow_thermal_cond_method>
 
 <snow_thermal_cond_glc_method>Jordan1991</snow_thermal_cond_glc_method>
-<snow_thermal_cond_glc_method phys="clm6_0">Jordan1991</snow_thermal_cond_glc_method>
+<snow_thermal_cond_glc_method phys="clm6_0">Sturm1997</snow_thermal_cond_glc_method>
+<snow_thermal_cond_glc_method phys="clm6_0" esm="noresm">Jordan1991</snow_thermal_cond_glc_method>
 
 <snow_thermal_cond_lake_method>Jordan1991</snow_thermal_cond_lake_method>
-<!--snow_thermal_cond_lake_method phys="clm6_0">c</snow_thermal_cond_lake_method-->
+<snow_thermal_cond_lake_method phys="clm6_0">Sturm1997</snow_thermal_cond_lake_method>
 
 <!-- Default glacier behavior is:
      Mountain glaciers: single_at_atm_topo
@@ -570,8 +571,11 @@ attributes from the config_cache.xml file (with keys converted to upper-case).
      If CISM is running over Antarctica, then we change the Antarctica
      behavior to virtual. Note that the Greenland behavior is always
      virtual, even if Greenland isn't included in this run.
+
+     with FATES we have to always run antarctica with virtual, otherwise we can not use any finidat from a non-antarctica run
 -->
-<glacier_region_behavior glc_use_antarctica="0">'single_at_atm_topo','UNSET','virtual','virtual'</glacier_region_behavior>
+<glacier_region_behavior glc_use_antarctica="0">'single_at_atm_topo','UNSET','virtual','multiple'</glacier_region_behavior>
+<glacier_region_behavior use_fates=".true." esm="noresm">'single_at_atm_topo','UNSET','virtual','virtual'</glacier_region_behavior>
 <glacier_region_behavior glc_use_antarctica="1">'single_at_atm_topo','UNSET','virtual','virtual' </glacier_region_behavior>
 
 <!-- Default glacier melt behavior is:
@@ -612,8 +616,8 @@ attributes from the config_cache.xml file (with keys converted to upper-case).
 <!-- FATES default parameter file                                       -->
 <!-- path is relative to the land root (ie the path to CTSM)            -->
 <!-- ================================================================== -->
-
-<fates_paramfile>src/fates/parameter_files/fates_params_noresm.json</fates_paramfile>
+<fates_paramfile>src/fates/parameter_files/fates_params_default.json</fates_paramfile>
+<fates_paramfile esm="noresm">src/fates/parameter_files/fates_params_noresm.json</fates_paramfile>
 
 <!-- ================================================================== -->
 <!-- Default surface roughness parameterization                         -->
@@ -1888,7 +1892,7 @@ lnd/clm2/surfdata_esmf/ctsm5.4.0/surfdata_0.9x1.25_hist_2000_78pfts_c251022.nc</
 lnd/clm2/surfdata_esmf/ctsm5.3.0/surfdata_0.9x1.25_hist_2000_78pfts_c240908.nc</fsurdat>
 <fsurdat hgrid="1.9x2.5"   sim_year="2000" use_crop=".true.">
 lnd/clm2/surfdata_esmf/ctsm5.4.0/surfdata_1.9x2.5_hist_2000_78pfts_c251022.nc</fsurdat>
-<fsurdat hgrid="10x15"     sim_year="2000" use_crop=".true.">sim_year="1850"
+<fsurdat hgrid="10x15"     sim_year="2000" use_crop=".true.">
 lnd/clm2/surfdata_esmf/ctsm5.4.0/surfdata_10x15_hist_2000_78pfts_c251022.nc</fsurdat>
 <fsurdat hgrid="4x5"       sim_year="2000" use_crop=".true.">
 lnd/clm2/surfdata_esmf/ctsm5.4.0/surfdata_4x5_hist_2000_78pfts_c251022.nc</fsurdat>
@@ -2753,7 +2757,8 @@ lnd/clm2/surfdata_esmf/NEON/ctsm5.4.0/surfdata_1x1_NEON_TOOL_hist_2000_78pfts_c2
 <!-- ===== FATES DEFAULTS =========== -->
 <fates_electron_transport_model use_fates=".true.">FvCB1980</fates_electron_transport_model>
 <fates_photosynth_acclimation   use_fates=".true.">nonacclimating</fates_photosynth_acclimation>
-<fates_spitfire_mode            use_fates=".true.">4</fates_spitfire_mode>
+<fates_spitfire_mode            use_fates=".true.">1</fates_spitfire_mode>
+<fates_spitfire_mode            use_fates=".true." ems="noresm">4</fates_spitfire_mode>
 <fates_spitfire_mode            use_fates=".true." use_fates_sp=".true.">0</fates_spitfire_mode>
 <fates_harvest_mode             use_fates=".true.">no_harvest</fates_harvest_mode>
 <fates_harvest_mode             use_fates=".true." use_fates_sp=".false." sim_year="1850" esm="noresm" hgrid="ne16np4.pg3">luhdata_area</fates_harvest_mode>
@@ -2767,7 +2772,8 @@ lnd/clm2/surfdata_esmf/NEON/ctsm5.4.0/surfdata_1x1_NEON_TOOL_hist_2000_78pfts_c2
 <fates_leafresp_model           use_fates=".true.">ryan1991</fates_leafresp_model>
 <fates_cstarvation_model        use_fates=".true.">linear</fates_cstarvation_model>
 <fates_regeneration_model       use_fates=".true.">default</fates_regeneration_model>
-<fates_radiation_model          use_fates=".true.">twostream</fates_radiation_model>
+<fates_radiation_model          use_fates=".true.">norman</fates_radiation_model>
+<fates_radiation_model          use_fates=".true." esm="noresm">twostream</fates_radiation_model>
 <fates_hydro_solver             use_fates=".true.">2D_Picard</fates_hydro_solver>
 <use_fates_managed_fire         use_fates=".true.">.false.</use_fates_managed_fire>
 <use_fates_planthydro           use_fates=".true.">.false.</use_fates_planthydro>

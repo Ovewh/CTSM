@@ -2286,9 +2286,9 @@ sub setup_logic_snicar_methods {
 sub setup_logic_snow {
   my ($opts, $nl_flags, $definition, $defaults, $nl) = @_;
 
-  add_default($opts, $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl, 'snow_thermal_cond_method' );
-  add_default($opts, $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl, 'snow_thermal_cond_glc_method' );
-  add_default($opts, $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl, 'snow_thermal_cond_lake_method' );
+  add_default($opts, $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl, 'snow_thermal_cond_method', 'esm'=>$nl_flags->{'esm'});
+  add_default($opts, $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl, 'snow_thermal_cond_glc_method', 'esm'=>$nl_flags->{'esm'});
+  add_default($opts, $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl, 'snow_thermal_cond_lake_method', 'esm'=>$nl_flags->{'esm'});
 
   my $numrad_snw = $nl->get_value('snicar_numrad_snw');
   add_default($opts, $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl, 'fsnowoptics',
@@ -2331,9 +2331,10 @@ sub setup_logic_glacier {
 
   add_default($opts,  $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl, 'glc_snow_persistence_max_days');
 
-  add_default($opts,  $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl, 'albice');
+  add_default($opts,  $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl, 'albice', 'esm'=>$nl_flags->{'esm'});
   add_default($opts,  $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl, 'glacier_region_behavior',
-              'glc_use_antarctica'=>$opts->{'glc_use_antarctica'});
+              'glc_use_antarctica'=>$opts->{'glc_use_antarctica'}, 'use_fates'=>$nl_flags->{'use_fates'},
+               'esm'=>$nl_flags->{'esm'} );
   add_default($opts,  $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl, 'glacier_region_melt_behavior');
   add_default($opts,  $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl, 'glacier_region_ice_runoff_behavior');
 }
@@ -6134,7 +6135,7 @@ sub logical_to_fortran {
 #-------------------------------------------------------------------------------
 
 sub add_logical_to_nl_flags {
-   # Add a logical setting to the $nl_flsgs hash, so can be used in attribute checking
+   # Add a logical setting to the $nl_flags hash, so can be used in attribute checking
    # This is important to do to make sure that the attribute is matched exactly as
    # either: .true. or .false.
    # Also sets nl_flags to .false. when the namelist variable is NOT set
