@@ -25,8 +25,9 @@ arbitrary initial conditions.
        group="default_settings"
        valid_values="" >
 Full pathname of initial conditions file for running with fates.
-Fates can not do initial interpolations, so another set of attributes for initial conditions is needed to have only exact matches.
-If blank CLM will startup from arbitrary initial conditions.
+Fates does not allow for interpolation for initial conditions,
+so  this hidden variable is used instead of finidat when fates is on for finding strict matches.
+This is then passed to normal finidat. This variable will not appear in the user_nl_clm
 </entry>
 
 <entry id="use_init_interp"
