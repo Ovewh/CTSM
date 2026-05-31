@@ -1822,7 +1822,8 @@ attributes from the config_cache.xml file (with keys converted to upper-case).
 >lnd/clm2/initdata_map/clmi.FHISTSp.2013-01-01.ne0CONUSne30x8_mt12_simyr2013_c200806.nc
 </finidat>
 
-<!--since fates can not do use_init_interp and needs different attributes there is a separate stricter finidat for it-->
+<!--since fates cannot have use_init_interp=true and finding finidat for it requires different attributes:
+    We use this hidden variable fates_finidat and then pass it to finidat when fates is on-->
 <!--ne16-->
 <!-- piControl and historical CRUJRA-->
 <fates_finidat hgrid="ne16np4.pg3" mask="tnx1v4" bgc_mode="fates_ncfb" esm="noresm" sim_year_range="constant"
