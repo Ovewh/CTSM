@@ -87,9 +87,9 @@ def buildnml(case, caseroot, compname):
     # -----------------------------------------------------
     # Error checking
     # -----------------------------------------------------
-    
+
     # check compset validity:
-    match = re.search(r'(?<=_CLM).*', compset)
+    match = re.search(r"(?<=_CLM).*", compset)
     if match:
         comp_conf = match.group(0)
         comp_conf = comp_conf.split("_")
@@ -98,26 +98,36 @@ def buildnml(case, caseroot, compname):
         logger.error("ERROR: CLM is not part of the compset")
 
     if "%NOANTHRO" in comp_conf:
-        if not  (re.search(r'.*(_CLM[5-6]0%SP[%_]).*', compset) or (re.search(r'.*(_CLM[5-6]0%BGC[%_]).*', compset))):
+        if not (
+            re.search(r".*(_CLM[5-6]0%SP[%_]).*", compset)
+            or (re.search(r".*(_CLM[5-6]0%BGC[%_]).*", compset))
+        ):
             logger.error("ERROR: %NOANTHRO is only appicable to CLMXX%SP or CLMXX%BGC (no crop)")
-    if ("%CMIP6DECK" in comp_conf) or ("%CMIP6WACCMDECK" in comp_conf) and ("BGC-CROP" not in comp_conf):
-        logger.error("ERROR: %CMIP6DECK and %CMIP6WACCMDECK modifiers are only applicable to BGC-CROP")
+    if (
+        ("%CMIP6DECK" in comp_conf)
+        or ("%CMIP6WACCMDECK" in comp_conf)
+        and ("BGC-CROP" not in comp_conf)
+    ):
+        logger.error(
+            "ERROR: %CMIP6DECK and %CMIP6WACCMDECK modifiers are only applicable to BGC-CROP"
+        )
     if ("%SP" in comp_conf or "%BGC" in comp_conf) and ("FATES" in comp_conf):
-        logger.error(f"ERROR: FATES can not be specified when %SP or %BGC are also specified in {compset}")
+        logger.error(
+            f"ERROR: FATES can not be specified when %SP or %BGC are also specified in {compset}"
+        )
     if ("NWP" in comp_conf) and ("FATES" in comp_conf):
         logger.error(f"ERROR: FATES can not be specified together with NWP in {compset}")
     if "%NORESM" in comp_conf:
         if "%FATES" not in comp_conf:
-            #instead of prohibiting running with %NORESM, just default the flag to 
-            logger.warning(f"WARNING: %NORESM is specified in a compset but NorESM-specific defaults are not specified for {compset} " +
-                            "that does not include FATES. This case will pick up defaults for CESM.")
+            # instead of prohibiting running with %NORESM, just default the flag to
+            logger.warning(
+                f"WARNING: %NORESM is specified in a compset but NorESM-specific defaults are not specified for {compset} "
+                + "that does not include FATES. This case will pick up defaults for CESM."
+            )
         if "%NOANTHRO" in comp_conf:
             logger.error(f"ERROR: %NORESM currently does not work with %NOANTHRO")
-        if re.search(r'^SSP.*',compset):
+        if re.search(r"^SSP.*", compset):
             logger.error(f"ERROR: SSPs are currently not available for %NORESM ")
-
-
-
 
     if clm_bldnml_opts.find("-namelist") >= 0:
         expect(
