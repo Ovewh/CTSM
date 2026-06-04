@@ -1784,7 +1784,9 @@ module CLMFatesInterfaceMod
              z0m(p)    = this%fates(nc)%bc_out(s)%z0m_pa(ifp)
              displa(p) = this%fates(nc)%bc_out(s)%displa_pa(ifp)
              dleaf_patch(p) = this%fates(nc)%bc_out(s)%dleaf_pa(ifp)
-             voc_pftindex(p) = this%fates(nc)%bc_out(s)%nocomp_MEGAN_pft_label_pa(ifp)
+             if (use_fates_nocomp) then
+                voc_pftindex(p) = this%fates(nc)%bc_pconst%voc_pftindex(this%fates(nc)%bc_out(s)%nocomp_pft_label_pa(ifp))
+             endif
 
           end do ! veg pach
 
@@ -2676,10 +2678,7 @@ module CLMFatesInterfaceMod
      associate( &
                wesley_veg_index    => drydepvel_inst%wesley_veg_index_patch   , &
                wesley_season_index => drydepvel_inst%wesley_season_index_patch, &
-               snow_depth          => waterdiagnosticbulk_inst%snow_depth_col , &
-               wvi                 => EDPftvarcon_inst%wesley_veg_index       , &
-               wst                 => EDPftvarcon_inst%wesley_sum_thresh      , &
-               wat                 => EDPftvarcon_inst%wesley_aut_thresh        &
+               snow_depth          => waterdiagnosticbulk_inst%snow_depth_col &
               )
                
       cday = get_curr_calday(reuse_day_365_for_day_366=.true.)
@@ -2706,18 +2705,18 @@ module CLMFatesInterfaceMod
              ncpft = (this%fates(nc)%bc_out(s)%nocomp_pft_label_pa(ifp))
              ! right now we only get hardcoded map from the param file, 
              ! this might get caclulated later within fates to make it work with full fates
-             wesley_veg_index(p) = int(wvi(ncpft))
+             wesley_veg_index(p) = this%fates(nc)%bc_pconst%wesley_veg_index(ncpft)
              iseason=-1
              ! determine season 
              !(this should actually be done by comparing LAI history, but now it's just thresholds)
-             if (this%fates(nc)%bc_out(s)%tlai_pa(ifp) .gt. wst(ncpft))then
+             if (this%fates(nc)%bc_out(s)%tlai_pa(ifp) .gt.  this%fates(nc)%bc_pconst%wesley_sum_thresh(ncpft))then
                 iseason = 1 ! Summer, or something like it.
              else ! NOT SUMMER
                 if (cday .lt. midyear)then 
                    if (grc%latdeg(g)>0._r8)then ! Northern Hemisphere
                       iseason = 5 ! NH spring
                    else ! !Southern Hemisphere
-                      if (this%fates(nc)%bc_out(s)%tlai_pa(ifp) .gt. wat(ncpft) )then
+                      if (this%fates(nc)%bc_out(s)%tlai_pa(ifp) .gt.  this%fates(nc)%bc_pconst%wesley_aut_thresh(ncpft))then
                          iseason = 2 ! SH early autumn
                       else 
                          iseason = 3 ! SH late autumn
@@ -2725,7 +2724,7 @@ module CLMFatesInterfaceMod
                    endif
                 else 
                    if (grc%latdeg(g)>0._r8)then ! Northern Hemisphere
-                      if (this%fates(nc)%bc_out(s)%tlai_pa(ifp) .gt. wat(ncpft))then
+                      if (this%fates(nc)%bc_out(s)%tlai_pa(ifp) .gt. this%fates(nc)%bc_pconst%wesley_aut_thresh(ncpft))then
                          iseason = 2 ! NH early autumn
                       else 
                         iseason = 3 ! NH late autumn
