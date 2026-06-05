@@ -4997,6 +4997,15 @@
   <test name="ERS_D_Ld5" grid="ne16pg3_ne16pg3_mtn14" compset="NI1850Clm60Nor" testmods="clm/FatesNoresm">
     <machines>
       <machine name="betzy" compiler="intel" category="aux_clm_noresm"/>
+    </machines>
+    <options>
+      <option name="wallclock">00:50:00</option>
+      <option name="comment">""</option>
+    </options>
+  </test>
+
+  <test name="ERS_D_Ld5" grid="ne30pg3_ne30pg3_mtn14" compset="NI1850Clm60Nor" testmods="clm/FatesNoresmRadLUFail">
+    <machines>
       <machine name="olivia" compiler="intel" category="aux_clm_noresm"/>
     </machines>
     <options>
@@ -5004,6 +5013,7 @@
       <option name="comment">""</option>
     </options>
   </test>
+
   <test name="ERS_D_Ld5" grid="ne16pg3_ne16pg3_mtn14" compset="NIHISTClm60Nor" testmods="clm/FatesNoresm">
     <machines>
       <machine name="betzy" compiler="intel" category="aux_clm_noresm"/>
