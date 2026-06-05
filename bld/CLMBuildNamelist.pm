@@ -5026,7 +5026,7 @@ sub setup_logic_fates {
                     'esm'=>$nl_flags->{'esm'});
         my @list  = (  "use_fates_planthydro", "use_fates_ed_st3", "use_fates_ed_prescribed_phys",
                        "use_fates_inventory_init","use_fates_dbh_init","fates_seeddisp_cadence","fates_history_dimlevel",
-                       "fates_parteh_mode", "use_fates_cohort_age_tracking","use_fates_tree_damage", 'use_fates_lupft',
+                       "fates_parteh_mode", "use_fates_cohort_age_tracking","use_fates_tree_damage",
                        "use_fates_daylength_factor", "fates_photosynth_acclimation", "fates_stomatal_model",
                        "fates_stomatal_assimilation", "fates_leafresp_model", "fates_cstarvation_model",
                        "fates_regeneration_model", "fates_hydro_solver", "fates_radiation_model", "fates_electron_transport_model",
@@ -5040,6 +5040,9 @@ sub setup_logic_fates {
         }
         add_default($opts, $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl,"fates_harvest_mode", 'use_fates'=>$nl_flags->{'use_fates'},
                     'use_fates_sp'=>$nl_flags->{'use_fates_sp'}, 'esm'=>$nl_flags->{'esm'},
+                    'hgrid'=>$nl_flags->{'res'}, 'sim_year'=>$nl_flags->{'sim_year'}, nofail=>1 );
+        add_default($opts, $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl,"use_fates_lupft", 'use_fates'=>$nl_flags->{'use_fates'},
+                    'use_fates_sp'=>$nl_flags->{'use_fates_sp'}, 'esm'=>$nl_flags->{'esm'}, 'bgc_mode'=>$nl_flags->{'bgc_mode'},
                     'hgrid'=>$nl_flags->{'res'}, 'sim_year'=>$nl_flags->{'sim_year'}, nofail=>1 );
         add_default($opts, $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl, 'use_fates_potentialveg', 'use_fates'=>$nl_flags->{'use_fates'});
         add_default($opts, $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl, 'use_fates_luh', 'use_fates'=>$nl_flags->{'use_fates'},
