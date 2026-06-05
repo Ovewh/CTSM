@@ -1263,12 +1263,13 @@ module CLMFatesInterfaceMod
              this%fates(nc)%bc_in,  &
              this%fates(nc)%bc_out)
 
+         !set smp to valid values everywhere, soil moisutre and temperature will get checked inside phenology
+         !the above routine sets layers to be activate based on if the site is on a exposed vegetation filter or not
+         ! since this routine can be called out of sequence with wrap_btran - we actually do not care about the filter.
          do j = 1,nlevsoil
-            if(this%fates(nc)%bc_out(s)%active_suction_sl(j)) then
                s_node = max(waterstatebulk_inst%h2osoi_vol_col(c,j)/soilstate_inst%eff_porosity_col(c,j) ,0.01_r8)
                call soil_water_retention_curve%soil_suction(c,j,s_node, soilstate_inst, smp_node)
                this%fates(nc)%bc_in(s)%smp_sl(j)           = smp_node
-            end if
          end do
 
 
