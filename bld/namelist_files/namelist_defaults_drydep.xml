@@ -35,6 +35,8 @@ attributes from the config_cache.xml file (with keys converted to upper-case).
 <!-- effective Henry's coef data for wet and dry deposition -->
 <dep_data_file>atm/cam/chem/trop_mozart/dvel/dep_data_c20221208.nc</dep_data_file>
 <dep_data_file use_fates=".true.">atm/cam/chem/trop_mozart/dvel/dep_data_c201019.nc</dep_data_file>
+<!-- scale factor for SO2 dry deposition velocity (1.0 = no scaling) -->
+<so2_dryvel_scalefact>1.0</so2_dryvel_scalefact>
 <!-- 
      Defaults for megan_emis_nl namelists to test standalone CTSM with 
      This is from the CAM FHISTC_MTt4s compset namelist from 04/25/2025 EBK
