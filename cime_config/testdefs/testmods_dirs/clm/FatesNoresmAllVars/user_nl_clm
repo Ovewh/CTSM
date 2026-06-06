@@ -1,0 +1,4 @@
+!!   USES THE DEFAULT INITIALIZATION FILE SPECIFIED IN bld/namelist_files/namelist_defaults_ctsm.xml
+hist_mfilt        = 1
+hist_nhtfrq       = -24
+hist_ndens = 1

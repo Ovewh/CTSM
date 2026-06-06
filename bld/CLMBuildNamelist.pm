@@ -92,12 +92,19 @@ OPTIONS
                                     This toggles off the namelist variable: use_cn
                                 bgc   = Carbon Nitrogen with methane, nitrification, vertical soil C,
                                         CENTURY or MIMICS decomposition
-				        This toggles on the namelist variables:
-                                          use_cn, use_lch4, use_nitrif_denitrif
-				fates = FATES/Ecosystem Demography with below ground BGC
-				        CENTURY or MIMICS decomposition
                                         This toggles on the namelist variables:
-				        use_fates. use_lch4 and use_nitrif_denitrif are optional
+                                        use_cn, use_lch4, use_nitrif_denitrif
+                                fates = FATES/Ecosystem Demography with below ground BGC
+                                        CENTURY or MIMICS decomposition
+                                        This toggles on the namelist variables:
+                                        use_fates. use_lch4 and use_nitrif_denitrif are optional
+                                fates_sp = FATES/Ecosystem Demography with Satellite Phenology
+                                        This toggles on the namelist variables:
+                                        use_fates, use_fates_sp, use_fates_nocomp
+                                fates_ncfb = FATES/Ecosystem Demography with no competition and
+                                             fixed biogeography.
+                                             This toggles on the namelist variables:
+                                             use_fates, use_fates_fixed_biogeog, use_fates_nocomp
 
                               (Only for CLM4.5/CLM5.0)
      -[no-]chk_res            Also check [do NOT check] to make sure the resolution and
@@ -655,6 +662,7 @@ sub process_namelist_commandline_options {
   setup_cmdl_mask($opts, $nl_flags, $definition, $defaults, $nl);
   setup_cmdl_configuration_and_structure($opts, $nl_flags, $definition, $defaults, $nl);
   setup_cmdl_bgc($opts, $nl_flags, $definition, $defaults, $nl);
+  setup_cmdl_esm($opts, $nl_flags, $definition, $defaults, $envxml_ref);
   setup_cmdl_fire_light_res($opts, $nl_flags, $definition, $defaults, $nl);
   setup_cmdl_spinup($opts, $nl_flags, $definition, $defaults, $nl);
   setup_cmdl_crop($opts, $nl_flags, $definition, $defaults, $nl);
@@ -792,7 +800,8 @@ sub setup_cmdl_fates_mode {
        # FATES should not be used with crop
        $log->fatal_error("** Cannot turn fates mode on with crop." );
     }
-  } elsif ($nl_flags->{"bgc_mode"} eq "fates" && ! &value_is_true($nl_flags->{"use_fates"}) ) {
+  } elsif (($nl_flags->{"bgc_mode"} eq "fates" || $nl_flags->{"bgc_mode"} eq "fates_sp" || 
+            $nl_flags->{"bgc_mode"} eq "fates_ncfb") && ! &value_is_true($nl_flags->{"use_fates"}) ) {
     $log->fatal_error("DEV_ERROR: internal logic error: bgc_mode = fates and use_fates = false.");
 
   } else {
@@ -823,7 +832,7 @@ sub setup_cmdl_fates_mode {
                       "use_fates_daylength_factor", "fates_photosynth_acclimation", "fates_stomatal_model",
                       "fates_stomatal_assimilation", "fates_leafresp_model", "fates_cstarvation_model",
                       "fates_regeneration_model", "fates_hydro_solver", "fates_radiation_model", "fates_electron_transport_model",
-		      "use_fates_managed_fire", "fates_lu_transition_logic");
+                      "use_fates_managed_fire", "fates_lu_transition_logic");
 
        # dis-allow fates specific namelist items with non-fates runs
        foreach my $var ( @list ) {
@@ -871,7 +880,6 @@ sub setup_cmdl_bgc {
 
   $val = $opts->{$var};
   $nl_flags->{'bgc_mode'} = $val;
-
   my $var = "bgc_mode";
   if ( $nl_flags->{$var} eq "default" ) {
      $nl_flags->{$var} = $defaults->get_value($var);
@@ -885,12 +893,29 @@ sub setup_cmdl_bgc {
   $log->verbose_message("Using $nl_flags->{$var} for bgc.");
 
   # now set the actual name list variables based on the bgc alias
+  # some fates variables will not get set as namelist vars but will be availible in nl_flags 
+  # for backwards comaptibility and making default's attributes work
   if ($nl_flags->{$var} eq "bgc" ) {
      $nl_flags->{'use_cn'} = ".true.";
      $nl_flags->{'use_fates'} = ".false.";
   } elsif ($nl_flags->{$var} eq "fates" ) {
      $nl_flags->{'use_cn'} = ".false.";
      $nl_flags->{'use_fates'} = ".true.";
+     $nl_flags->{'use_fates_sp'} = ".false.";
+     $nl_flags->{'use_fates_nocomp'} = ".false.";
+     $nl_flags->{'use_fates_fixed_biogeog'} = ".false.";
+  } elsif ($nl_flags->{$var} eq "fates_sp" ) {
+     $nl_flags->{'use_cn'} = ".false.";
+     $nl_flags->{'use_fates'} = ".true.";
+     $nl_flags->{'use_fates_sp'} = ".true.";
+     $nl_flags->{'use_fates_nocomp'} = ".true.";
+     $nl_flags->{'use_fates_fixed_biogeog'} = ".true.";
+  } elsif ($nl_flags->{$var} eq "fates_ncfb" ) {
+     $nl_flags->{'use_cn'} = ".false.";
+     $nl_flags->{'use_fates'} = ".true.";
+     $nl_flags->{'use_fates_sp'} = ".false.";
+     $nl_flags->{'use_fates_nocomp'} = ".true.";
+     $nl_flags->{'use_fates_fixed_biogeog'} = ".true.";
   } else {
      $nl_flags->{'use_cn'} = ".false.";
      $nl_flags->{'use_fates'} = ".false.";
@@ -900,6 +925,18 @@ sub setup_cmdl_bgc {
   }
   if ( defined($nl->get_value("use_fates")) && ($nl_flags->{'use_fates'} ne $nl->get_value("use_fates")) ) {
      $log->fatal_error("The namelist variable use_fates is inconsistent with the -bgc option");
+  }
+  if ($nl_flags->{'bgc_mode'} eq 'fates_ncfb' || $nl_flags->{'bgc_mode'} eq 'fates_sp') {
+     # we don't need to check for fates, because those will be set 
+     if ( defined($nl->get_value("use_fates_sp")) && ($nl_flags->{'use_fates_sp'} ne $nl->get_value("use_fates_sp")) ) {
+       $log->fatal_error("The namelist variable use_fates_sp is inconsistent with the -bgc option");
+     }
+     if ( defined($nl->get_value("use_fates_nocomp")) && ($nl_flags->{'use_fates_nocomp'} ne $nl->get_value("use_fates_nocomp")) ) {
+       $log->fatal_error("The namelist variable use_fates_nocomp is inconsistent with the -bgc option");
+     }
+     if ( defined($nl->get_value("use_fates_fixed_biogeog")) && ($nl_flags->{'use_fates_fixed_biogeog'} ne $nl->get_value('use_fates_fixed_biogeog')) ) {
+       $log->fatal_error("The namelist variable use_fates_biogeog is inconsistent with the -bgc option");
+     }
   }
 
   # Now set use_cn and use_fates
@@ -913,17 +950,21 @@ sub setup_cmdl_bgc {
      }
   }
   #
-  # Set FATES-SP mode
-  #
-  if ( &value_is_true( $nl_flags->{'use_fates'} ) ) {
-     add_default($opts, $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl, 'use_fates_sp', 'use_fates'=>$nl_flags->{'use_fates'} );
-     if ( &value_is_true($nl->get_value('use_fates_sp')) ) {
-        $nl_flags->{'use_fates_sp'} = ".true.";
-     } else {
-        $nl_flags->{'use_fates_sp'} = ".false.";
+  # Set nl vars for FATES modes
+  if ( &value_is_true( $nl_flags->{'use_fates'}) ) {
+  foreach $var ( "use_fates_sp", "use_fates_nocomp", "use_fates_fixed_biogeog" ) {
+      if (not defined($nl->get_value($var))) {
+         $val = $nl_flags->{$var}; 
+      # We have to process some fates defaults here, unfortunately
+    
+     $group = $definition->get_group_name($var);
+     $nl->set_variable_value($group, $var, $val);
+     if (  ! $definition->is_valid_value( $var, $val ) ) {
+        my @valid_values   = $definition->get_valid_values( $var );
+        $log->fatal_error("$var has a value ($val) that is NOT valid. Valid values are: @valid_values");
      }
-  } else {
-     $nl_flags->{'use_fates_sp'} = ".false.";
+     }
+  }
   }
   #
   # Determine Soil decomposition method
@@ -1025,6 +1066,24 @@ sub setup_cmdl_bgc {
   }
 } # end bgc
 
+#-------------------------------------------------------------------------------
+sub setup_cmdl_esm {
+
+  my ($opts, $nl_flags, $definition, $defaults, $envxml_ref) = @_;
+
+  my $var = "esm";
+  $nl_flags->{$var} = $envxml_ref->{'CLM_ESM_DEFAULTS'};
+  
+  my $val = $nl_flags->{$var};
+  #$log->warning("$var is $val");
+  my $group = $definition->get_group_name($var);
+  if ( ! $definition->is_valid_value( $var, $val , 'noquotes'=>1  ) ) {
+     my @valid_values   = $definition->get_valid_values( $var );
+     $log->fatal_error("$var namelist flag has a value ($val) that is NOT valid. Valid values are: @valid_values");
+  }
+  $log->verbose_message("Using $nl_flags->{'$var'} for $var.");
+}
+
 
 #-------------------------------------------------------------------------------
 sub setup_cmdl_fire_light_res {
@@ -1043,7 +1102,7 @@ sub setup_cmdl_fire_light_res {
      add_default($opts, $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl, 'use_fates_managed_fire',
                  'use_fates'=>$nl_flags->{'use_fates'}, 'use_fates_sp'=>$nl_flags->{'use_fates_sp'} );
      add_default($opts, $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl, 'fates_spitfire_mode', 'use_fates'=>$nl_flags->{'use_fates'},
-                 'use_fates_managed_fire'=>$nl->get_value('use_fates_managed_fire'), 'use_fates_sp'=>$nl_flags->{'use_fates_sp'} );
+                 'use_fates_managed_fire'=>$nl->get_value('use_fates_managed_fire'), 'use_fates_sp'=>$nl_flags->{'use_fates_sp'}, , 'esm'=>$nl_flags->{'esm'} );
      # Check use_fates_managed_fire mode is running with spitfire on
      if ( defined($nl->get_value('use_fates_managed_fire'))  ) {
         if ( &value_is_true($nl->get_value('use_fates_managed_fire')) ) {
@@ -1409,9 +1468,10 @@ sub setup_cmdl_run_type {
     }
   }
   if ( ! defined $set ) {
+    my $sim_year = $nl_flags->{'sim_year'};
      add_default($opts, $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl, $var,
-                 'use_cndv'=>$nl_flags->{'use_cndv'}, 'use_fates'=>$nl_flags->{'use_fates'},
-                 'sim_year'=>$st_year, 'sim_year_range'=>$nl_flags->{'sim_year_range'},
+                 'use_cndv'=>$nl_flags->{'use_cndv'}, 'use_fates'=>$nl_flags->{'use_fates'}, 'bgc_mode'=>$nl_flags->{'fates_ncfb'},
+                 'sim_year'=>$st_year, 'sim_year_range'=>$nl_flags->{'sim_year_range'}, 'esm'=>$nl_flags->{'esm'},
                  'bgc_spinup'=>$nl_flags->{'bgc_spinup'}, 'lnd_tuning_mode'=>$nl_flags->{'lnd_tuning_mode'} );
   }
   $nl_flags->{'clm_start_type'} = $nl->get_value($var);
@@ -1640,6 +1700,9 @@ sub process_namelist_commandline_use_case {
     $settings{'use_cndv'}    = $nl_flags->{'use_cndv'};
     $settings{'use_crop'}    = $nl_flags->{'use_crop'};
     $settings{'cnfireson'}   = $nl_flags->{'cnfireson'};
+    $settings{'use_fates'}   => $nl_flags->{'use_fates'};
+    $settings{'bgc_mode'}    => $nl_flags->{'bgc_mode'};
+    $settings{'esm'}         => $nl_flags->{'esm'};
 
     # Loop over the variables specified in the use case.
     # Add each one to the namelist.
@@ -2223,9 +2286,9 @@ sub setup_logic_snicar_methods {
 sub setup_logic_snow {
   my ($opts, $nl_flags, $definition, $defaults, $nl) = @_;
 
-  add_default($opts, $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl, 'snow_thermal_cond_method' );
-  add_default($opts, $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl, 'snow_thermal_cond_glc_method' );
-  add_default($opts, $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl, 'snow_thermal_cond_lake_method' );
+  add_default($opts, $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl, 'snow_thermal_cond_method', 'esm'=>$nl_flags->{'esm'});
+  add_default($opts, $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl, 'snow_thermal_cond_glc_method', 'esm'=>$nl_flags->{'esm'});
+  add_default($opts, $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl, 'snow_thermal_cond_lake_method', 'esm'=>$nl_flags->{'esm'});
 
   my $numrad_snw = $nl->get_value('snicar_numrad_snw');
   add_default($opts, $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl, 'fsnowoptics',
@@ -2268,9 +2331,10 @@ sub setup_logic_glacier {
 
   add_default($opts,  $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl, 'glc_snow_persistence_max_days');
 
-  add_default($opts,  $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl, 'albice');
+  add_default($opts,  $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl, 'albice', 'esm'=>$nl_flags->{'esm'});
   add_default($opts,  $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl, 'glacier_region_behavior',
-              'glc_use_antarctica'=>$opts->{'glc_use_antarctica'});
+              'glc_use_antarctica'=>$opts->{'glc_use_antarctica'}, 'use_fates'=>$nl_flags->{'use_fates'},
+               'esm'=>$nl_flags->{'esm'} );
   add_default($opts,  $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl, 'glacier_region_melt_behavior');
   add_default($opts,  $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl, 'glacier_region_ice_runoff_behavior');
 }
@@ -2283,8 +2347,9 @@ sub setup_logic_params_file {
 
   add_default($opts, $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl, 'paramfile',
               'phys'=>$nl_flags->{'phys'},
+              'use_hillslope'=>$nl_flags->{'use_hillslope'},
               'lnd_tuning_mode'=>$nl_flags->{'lnd_tuning_mode'},
-              'use_flexibleCN'=>$nl_flags->{'use_flexibleCN'}, 'use_fates'=>$nl_flags->{'use_fates'});
+              'use_flexibleCN'=>$nl_flags->{'use_flexibleCN'}, 'use_fates'=>$nl_flags->{'use_fates'}, "esm"=>$nl_flags->{'esm'});
 }
 
 #-------------------------------------------------------------------------------
@@ -2663,6 +2728,32 @@ sub setup_logic_initial_conditions {
   }
   my $useinitvar = "use_init_interp";
 
+
+  my %fates_settings;
+  if ( (not defined $finidat) && &value_is_true($nl_flags->{"use_fates"})) {
+     $fates_settings{'hgrid'}           = $nl_flags->{'res'};
+     $fates_settings{'mask'}           = $nl_flags->{'mask'};
+     $fates_settings{'sim_year'}        = $nl_flags->{'sim_year'};
+     $fates_settings{'sim_year_range'}        = $nl_flags->{'sim_year_range'};
+     $fates_settings{'esm'}             = $nl_flags->{'esm'};
+     $fates_settings{'bgc_mode'}        = $nl_flags->{'bgc_mode'};
+     $fates_settings{'glc_nec'}         = $nl_flags->{'glc_nec'};
+     $fates_settings{'lnd_tuning_mode'} = $nl_flags->{'lnd_tuning_mode'};  
+     $fates_settings{'phys'}            = $physv->as_string();
+     $fates_settings{'ic_ymd'}         = $nl->get_value('start_ymd');
+     $fates_settings{'ic_md'}         = $nl->get_value('start_ymd');
+     $fates_settings{'nofail'} = 1;
+     add_default($opts,  $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl, "fates_finidat", %fates_settings );
+     my $finidatf = $nl->get_value("fates_finidat");
+     if ( (defined $finidatf) && ( ! string_is_undef_or_empty($finidatf))) {
+        $finidat = $finidatf;
+        add_default($opts,  $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl,
+                $var, 'val'=>$finidatf);
+     } else { 
+        add_default($opts,  $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl,
+                $var, 'val'=>"' '", 'no_abspath'=>1);
+    }
+  }
   my %settings;
   my $use_init_interp_default = ".false.";
   if (not defined $finidat ) {
@@ -2687,7 +2778,7 @@ sub setup_logic_initial_conditions {
     }
     foreach my $item ( "mask", "maxpft", "irrigate", "glc_nec", "use_crop", "use_cn", "use_cndv",
                        "use_fates", "use_excess_ice",
-                       "lnd_tuning_mode",
+                       "lnd_tuning_mode"
                      ) {
        $settings{$item}    = $nl_flags->{$item};
     }
@@ -2761,7 +2852,7 @@ SIMYR:    foreach my $sim_yr ( @sim_years ) {
           add_default($opts,  $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl, $useinitvar,
                       'use_cndv'=>$nl_flags->{'use_cndv'}, 'phys'=>$physv->as_string(), 'hgrid'=>$nl_flags->{'res'},
                       'sim_year'=>$settings{'sim_year'}, 'nofail'=>1, 'lnd_tuning_mode'=>$nl_flags->{'lnd_tuning_mode'},
-                      'use_fates'=>$nl_flags->{'use_fates'} );
+                      'use_fates'=>$nl_flags->{'use_fates'}, 'esm'=>$nl_flags->{'esm'} );
           $settings{$useinitvar} = $nl->get_value($useinitvar);
           if ( ! &value_is_true($nl->get_value($useinitvar) ) ) {
              if ( $nl_flags->{'clm_start_type'} =~ /startup/ ) {
@@ -2777,6 +2868,9 @@ SIMYR:    foreach my $sim_yr ( @sim_years ) {
                 }
              }
           } else {
+              if ( $nl_flags->{'clm_start_type'} =~ /startup/  && &value_is_true($nl_flags->{'use_fates'}) ) {
+                 $log->fatal_error('ERROR: use_fates = .true. is not compatible with $useinitvar being set to true')
+              }
              my $stat = add_default($opts,  $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl, "init_interp_attributes",
                                  'sim_year'=>$settings{'sim_year'}, 'use_cndv'=>$nl_flags->{'use_cndv'},
                                  'glc_nec'=>$nl_flags->{'glc_nec'}, 'use_fates'=>$nl_flags->{'use_fates'},
@@ -3065,7 +3159,11 @@ sub setup_logic_do_transient_lakes {
       # Note that, if the variable cannot be true, we don't call add_default
       # - so that we don't clutter up the namelist with variables that don't
       # matter for this case
-      add_default($opts, $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl, $var, val=>$default_val);
+      if (! &value_is_true($nl_flags->{'use_fates'})) {
+         add_default($opts, $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl, $var, val=>$default_val);
+      } else {
+      add_default($opts, $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl, $var, 'use_fates'=>$nl_flags->{'use_fates'})
+      }
    }
 
    # Make sure the value is false when it needs to be false - i.e., that the
@@ -3143,7 +3241,11 @@ sub setup_logic_do_transient_urban {
       # Note that, if the variable cannot be true, we don't call add_default
       # - so that we don't clutter up the namelist with variables that don't
       # matter for this case
-      add_default($opts, $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl, $var, val=>$default_val);
+      if (! &value_is_true($nl_flags->{'use_fates'})) {
+         add_default($opts, $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl, $var, val=>$default_val);
+      } else {
+      add_default($opts, $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl, $var, 'use_fates'=>$nl_flags->{'use_fates'})
+      }
    }
 
    # Make sure the value is false when it needs to be false - i.e., that the
@@ -3337,12 +3439,12 @@ sub setup_logic_supplemental_nitrogen {
   #
   my ($opts, $nl_flags, $definition, $defaults, $nl) = @_;
 
-  if ( $nl_flags->{'bgc_mode'} ne "sp" && $nl_flags->{'bgc_mode'} ne "fates" && &value_is_true($nl_flags->{'use_crop'}) ) {
+  if ( $nl_flags->{'bgc_mode'} eq "bgc" && &value_is_true($nl_flags->{'use_crop'}) ) {
       # If this is non-fates, non-sp and crop is active
       add_default($opts, $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl,
                  'suplnitro', 'use_cn'=>$nl_flags->{'use_cn'}, 'use_crop'=>$nl_flags->{'use_crop'});
 
-  } elsif ( $nl_flags->{'bgc_mode'} eq "fates" ) {
+  } elsif ( &value_is_true($nl_flags->{'use_fates'}) ) {
       # Or... if its fates
       add_default($opts, $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl,
                  'suplnitro', 'fates_parteh_mode'=>remove_leading_and_trailing_quotes($nl->get_value('fates_parteh_mode')));
@@ -3360,7 +3462,7 @@ sub setup_logic_supplemental_nitrogen {
     }
 
     if ( $suplnitro =~ /ALL/i ) {
-      if ( $nl_flags->{'bgc_spinup'} eq "on" && $nl_flags->{'bgc_mode'} ne "fates" ) {
+      if ( $nl_flags->{'bgc_spinup'} eq "on" && $nl_flags->{'bgc_mode'} eq "bgc" ) {
         $log->warning("There is no need to use a bgc_spinup mode when supplemental Nitrogen is on for all PFTs, as these modes spinup Nitrogen" );
       }
     }
@@ -3693,8 +3795,11 @@ sub setup_logic_hillslope {
   add_default($opts, $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl, 'hillslope_transmissivity_method' );
   add_default($opts, $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl, 'hillslope_pft_distribution_method' );
   add_default($opts, $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl, 'hillslope_soil_profile_method' );
+
+  $nl_flags->{'use_hillslope'} = $nl->get_value('use_hillslope');
   add_default($opts, $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl, 'use_hillslope_routing', 'use_hillslope'=>$nl_flags->{'use_hillslope'} );
   add_default($opts, $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl, 'hillslope_fsat_equals_zero', 'use_hillslope'=>$nl_flags->{'use_hillslope'} );
+
   my $use_hillslope = $nl->get_value('use_hillslope');
   my $use_hillslope_routing = $nl->get_value('use_hillslope_routing');
   if ( (! &value_is_true($use_hillslope)) && &value_is_true($use_hillslope_routing) ) {
@@ -3771,7 +3876,7 @@ sub setup_logic_c_isotope {
   &add_logical_to_nl_flags( $nl_flags, $nl, "use_c14" );
   my $use_c13 = $nl->get_value('use_c13');
   my $use_c14 = $nl->get_value('use_c14');
-  if ( $nl_flags->{'bgc_mode'} ne "sp" && $nl_flags->{'bgc_mode'} ne "fates" ) {
+  if ( $nl_flags->{'bgc_mode'} ne "sp" && ( ! &value_is_true($nl_flags->{'use_fates'}))) {
     if ( $nl_flags->{'bgc_mode'} ne "bgc" ) {
       if ( &value_is_true($use_c13) ) {
         $log->warning("use_c13 is ONLY scientifically validated with the bgc=BGC configuration" );
@@ -4216,13 +4321,15 @@ sub setup_logic_dry_deposition {
 
   my @list = ( "drydep_list", "dep_data_file");
   if ($opts->{'drydep'} ) {
-    add_default($opts,  $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl, 'drydep_list', "use_fates"=>$nl_flags->{'use_fates'});
-    add_default($opts,  $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl, 'dep_data_file', "use_fates"=>$nl_flags->{'use_fates'});
+    add_default($opts,  $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl, 'drydep_list', "use_fates"=>$nl_flags->{'use_fates'}, 
+                "esm"=>$nl_flags->{'esm'});
+    add_default($opts,  $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl, 'dep_data_file', "use_fates"=>$nl_flags->{'use_fates'},
+                "esm"=>$nl_flags->{'esm'});
     &remove_newlines( $nl, $definition, "drydep_list" );
   }
   # fates-sp will set use_fates_nocomp in the setup logic for fates earlier
   if ( &value_is_true( $nl_flags->{'use_fates'}) && 
-       ! &value_is_true($nl->get_value('use_fates_nocomp'))) {
+       (! &value_is_true($nl_flags->{'use_fates_nocomp'}))) {
      foreach my $var ( @list ) {
         if ( defined($nl->get_value($var)) ) {
            $log->warning("DryDeposition $var is being set and can NOT be on when FATES is also on unless FATES-NOCOMP mode is on.\n" .
@@ -4356,8 +4463,10 @@ sub setup_logic_megan {
         $log->fatal_error("Running MEGAN in fates bgc mode without use_fates_nocomp=.true. or use_fates_sp=.true. is not allowed");
   }
 
-    add_default($opts,  $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl, 'megan_specifier',"use_fates"=>$nl_flags->{'use_fates'});
-    add_default($opts,  $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl, 'megan_factors_file',"use_fates"=>$nl_flags->{'use_fates'});
+    add_default($opts,  $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl, 'megan_specifier',"use_fates"=>$nl_flags->{'use_fates'},
+                "esm"=>$nl_flags->{'esm'});
+    add_default($opts,  $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl, 'megan_factors_file',"use_fates"=>$nl_flags->{'use_fates'},
+                "esm"=>$nl_flags->{'esm'});
   }
   if ( defined($nl->get_value('megan_specifier')) ||
        defined($nl->get_value('megan_factors_file')) ) {
@@ -4913,10 +5022,11 @@ sub setup_logic_fates {
     my ($opts, $nl_flags, $definition, $defaults, $nl) = @_;
 
     if (&value_is_true( $nl_flags->{'use_fates'})  ) {
-        add_default($opts, $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl, 'fates_paramfile', 'phys'=>$nl_flags->{'phys'});
+        add_default($opts, $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl, 'fates_paramfile', 'phys'=>$nl_flags->{'phys'},
+                    'esm'=>$nl_flags->{'esm'});
         my @list  = (  "use_fates_planthydro", "use_fates_ed_st3", "use_fates_ed_prescribed_phys",
                        "use_fates_inventory_init","use_fates_dbh_init","fates_seeddisp_cadence","fates_history_dimlevel",
-                       "fates_harvest_mode","fates_parteh_mode", "use_fates_cohort_age_tracking","use_fates_tree_damage",
+                       "fates_parteh_mode", "use_fates_cohort_age_tracking","use_fates_tree_damage",
                        "use_fates_daylength_factor", "fates_photosynth_acclimation", "fates_stomatal_model",
                        "fates_stomatal_assimilation", "fates_leafresp_model", "fates_cstarvation_model",
                        "fates_regeneration_model", "fates_hydro_solver", "fates_radiation_model", "fates_electron_transport_model",
@@ -4925,15 +5035,21 @@ sub setup_logic_fates {
 
         foreach my $var ( @list ) {
            add_default($opts, $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl, $var, 'use_fates'=>$nl_flags->{'use_fates'},
-                       'use_fates_sp'=>$nl_flags->{'use_fates_sp'} );
+                       'hgrid'=>$nl_flags->{'res'}, 'bgc_mode'=>$nl_flags->{'bgc_mode'},
+                       'use_fates_sp'=>$nl_flags->{'use_fates_sp'},'use_fates_nocomp'=>$nl_flags->{'use_fates_nocomp'}, 'esm'=>$nl_flags->{'esm'});
         }
-
+        add_default($opts, $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl,"fates_harvest_mode", 'use_fates'=>$nl_flags->{'use_fates'},
+                    'use_fates_sp'=>$nl_flags->{'use_fates_sp'}, 'esm'=>$nl_flags->{'esm'},
+                    'hgrid'=>$nl_flags->{'res'}, 'sim_year'=>$nl_flags->{'sim_year'}, nofail=>1 );
+        add_default($opts, $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl,"use_fates_lupft", 'use_fates'=>$nl_flags->{'use_fates'},
+                    'use_fates_sp'=>$nl_flags->{'use_fates_sp'}, 'esm'=>$nl_flags->{'esm'}, 'bgc_mode'=>$nl_flags->{'bgc_mode'},
+                    'hgrid'=>$nl_flags->{'res'}, 'sim_year'=>$nl_flags->{'sim_year'}, nofail=>1 );
         add_default($opts, $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl, 'use_fates_potentialveg', 'use_fates'=>$nl_flags->{'use_fates'});
-        add_default($opts, $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl, 'use_fates_lupft', 'use_fates'=>$nl_flags->{'use_fates'});
         add_default($opts, $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl, 'use_fates_luh', 'use_fates'=>$nl_flags->{'use_fates'},
+                    'use_fates_sp'=>$nl_flags->{'use_fates_sp'},
                     'use_fates_lupft'=>$nl->get_value('use_fates_lupft'),
                     'use_fates_potentialveg'=>$nl->get_value('use_fates_potentialveg'),
-		              'fates_lu_transition_logic'=>$nl->get_value('fates_lu_transition_logic'),
+                    'fates_lu_transition_logic'=>$nl->get_value('fates_lu_transition_logic'),
                     'fates_harvest_mode'=>remove_leading_and_trailing_quotes($nl->get_value('fates_harvest_mode')) );
         add_default($opts, $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl, 'use_fates_nocomp', 'use_fates'=>$nl_flags->{'use_fates'},
                     'use_fates_lupft'=>$nl->get_value('use_fates_lupft'),
@@ -4942,8 +5058,7 @@ sub setup_logic_fates {
                     'use_fates_lupft'=>$nl->get_value('use_fates_lupft'),
                     'use_fates_sp'=>$nl_flags->{'use_fates_sp'} );
         add_default($opts, $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl, 'use_fates_dbh_init', 'use_fates'=>$nl_flags->{'use_fates'},
-                    'use_fates_nocomp'=>$nl->get_value('use_fates_nocomp'));
-
+                    'use_fates_nocomp'=>$nl->get_value('use_fates_nocomp'), 'esm'=>$nl_flags->{'esm'});
 
         # For FATES SP mode make sure no-competetiion, and fixed-biogeography are also set
         # And also check for other settings that can't be trigged on as well
@@ -5014,7 +5129,8 @@ sub setup_logic_fates {
                  if ( ! &value_is_true($nl->get_value($var)) ) {
                     $var = "fluh_timeseries";
                     add_default($opts, $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl, $var, 'use_fates'=>$nl_flags->{'use_fates'},
-                                'hgrid'=>$nl_flags->{'res'}, 'sim_year_range'=>$nl_flags->{'sim_year_range'});
+                                'hgrid'=>$nl_flags->{'res'}, 'sim_year_range'=>$nl_flags->{'sim_year_range'}, 
+                                'sim_year'=>$nl_flags->{'sim_year'}, 'esm'=>$nl_flags->{'esm'});
                     my $fname = remove_leading_and_trailing_quotes( $nl->get_value($var) );
                     if ( ! defined($nl->get_value($var))  ) {
                        $log->fatal_error("$var is required when use_fates_luh is set and use_fates_potentialveg is false" );
@@ -5026,7 +5142,7 @@ sub setup_logic_fates {
                  if ( &value_is_true($nl->get_value($var)) ) {
                     $var = "flandusepftdat";
                     add_default($opts, $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl, $var, 'use_fates'=>$nl_flags->{'use_fates'},
-                                'phys'=>$nl_flags->{'phys'}, 'hgrid'=>$nl_flags->{'res'}, nofail=>1 );
+                                'phys'=>$nl_flags->{'phys'}, 'hgrid'=>$nl_flags->{'res'},'esm'=>$nl_flags->{'esm'}, nofail=>1 );
                     my $fname = remove_leading_and_trailing_quotes( $nl->get_value($var) );
                     if ( ! defined($nl->get_value($var))  ) {
                       $log->fatal_error("$var is required when use_fates_luh and use_fates_fixed_biogeog is set" );
@@ -6022,7 +6138,7 @@ sub logical_to_fortran {
 #-------------------------------------------------------------------------------
 
 sub add_logical_to_nl_flags {
-   # Add a logical setting to the $nl_flsgs hash, so can be used in attribute checking
+   # Add a logical setting to the $nl_flags hash, so can be used in attribute checking
    # This is important to do to make sure that the attribute is matched exactly as
    # either: .true. or .false.
    # Also sets nl_flags to .false. when the namelist variable is NOT set

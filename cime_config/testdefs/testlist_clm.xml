@@ -4930,7 +4930,7 @@
 
   <!-- FATES-SP -->
 
-  <test name="SMS_D" grid="ne30pg3_ne30pg3_mtn14" compset="I2000Clm60FatesSpRsGs" testmods="clm/FatesColdSatPhen">
+  <test name="SMS_D" grid="ne16pg3_ne16pg3_mtn14" compset="NIHISTClm60FatesSp" testmods="clm/FatesColdSatPhen">
     <machines>
       <machine name="betzy" compiler="gnu" category="aux_clm_noresm"/>
       <machine name="olivia" compiler="gnu" category="aux_clm_noresm"/>
@@ -4950,17 +4950,17 @@
       <option name="comment">""</option>
     </options>
   </test>
-  <test name="ERI_D_Ld30" grid="f45_f45_mg37" compset="I1850Clm60FatesSp" testmods="clm/FatesColdClm60Cam7LndTuningMode">
+  <test name="ERI_D_Ld30" grid="f45_f45_mg37" compset="NI1850Clm60FatesSp" testmods="clm/FatesColdClm60Cam7LndTuningMode">
     <machines>
       <machine name="betzy" compiler="gnu" category="aux_clm_noresm"/>
-      <machine name="olivia" compiler="gnu" category="aux_clm_noresm"/>
+      <machine name="olivia" compiler="intel" category="aux_clm_noresm"/>
     </machines>
     <options>
       <option name="wallclock">00:30:00</option>
       <option name="comment">""</option>
     </options>
   </test>
-  <test name="SMS_D" grid="ne16pg3_ne16pg3_mtn14" compset="I2000Clm60FatesSpRsGs" testmods="clm/FatesColdDryDepSatPhen">
+  <test name="SMS_D" grid="ne16pg3_ne16pg3_mtn14" compset="NIHISTClm60FatesSp" testmods="clm/FatesNoresmDryDep">
     <machines>
       <machine name="betzy" compiler="intel" category="aux_clm_noresm"/>
       <machine name="olivia" compiler="intel" category="aux_clm_noresm"/>
@@ -4973,7 +4973,7 @@
   <test name="SMS_Ld1" grid="f45_f45_mg37" compset="I1850Clm60FatesSp" testmods="clm/FatesColdReducedOutput">
     <machines>
       <machine name="betzy" compiler="gnu" category="aux_clm_noresm"/>
-      <machine name="olivia" compiler="gnu" category="aux_clm_noresm"/>
+      <machine name="olivia" compiler="intel" category="aux_clm_noresm"/>
     </machines>
     <options>
       <option name="wallclock">00:30:00</option>
@@ -4983,7 +4983,7 @@
 
   <!-- FATES-NOCOMP -->
 
-  <test name="ERS_D_Ld11" grid="ne30pg3_ne30pg3_mtn14" compset="I1850Clm60FatesNocompSpinup" testmods="clm/FatesColdSpinup">
+  <test name="ERS_D_Ld5" grid="ne30pg3_ne30pg3_mtn14" compset="NI1850Clm60NorSpinup" testmods="clm/FatesNoresmSpinupAllVars">
     <machines>
       <machine name="betzy" compiler="intel" category="aux_clm_noresm"/>
       <machine name="olivia" compiler="intel" category="aux_clm_noresm"/>
@@ -4994,7 +4994,7 @@
     </options>
   </test>
 
-  <test name="ERS_Ld11_P1536" grid="ne30pg3_ne30pg3_mtn14" compset="I1850Clm60FatesNocompSpinup" testmods="clm/FatesIniSpinup">
+  <test name="ERS_D_Ld5" grid="ne16pg3_ne16pg3_mtn14" compset="NI1850Clm60Nor" testmods="clm/FatesNoresm">
     <machines>
       <machine name="betzy" compiler="intel" category="aux_clm_noresm"/>
     </machines>
@@ -5004,7 +5004,7 @@
     </options>
   </test>
 
-  <test name="ERS_Ld11" grid="ne30pg3_ne30pg3_mtn14" compset="I1850Clm60FatesNocompSpinup" testmods="clm/FatesIniSpinup">
+  <test name="ERS_D_Ld5" grid="ne30pg3_ne30pg3_mtn14" compset="NI1850Clm60Nor" testmods="clm/FatesNoresmRadLUFail">
     <machines>
       <machine name="olivia" compiler="intel" category="aux_clm_noresm"/>
     </machines>
@@ -5014,56 +5014,87 @@
     </options>
   </test>
 
-  <test name="SMS_D_Ld1000_P1536" grid="ne30pg3_ne30pg3_mtn14" compset="I1850Clm60FatesNocompSpinup" testmods="clm/FatesColdSpinup">
+  <test name="ERS_D_Ld5" grid="ne16pg3_ne16pg3_mtn14" compset="NIHISTClm60Nor" testmods="clm/FatesNoresm">
     <machines>
-      <machine name="betzy" compiler="gnu" category="aux_clm_noresm"/>
-    </machines>
-    <options>
-      <option name="wallclock">02:50:00</option>
-      <option name="comment">"check for numerical instabilities during spinup"</option>
-    </options>
-  </test>
-  <test name="ERS_D_Ld761_P1408" grid="ne16pg3_ne16pg3_mtn14" compset="I1850Clm60FatesNoComp" testmods="clm/FatesColdNoCompFixedBioGeo">
-    <machines>
-      <machine name="betzy" compiler="gnu" category="aux_clm_noresm"/>
-    </machines>
-    <options>
-      <option name="wallclock">02:50:00</option>
-      <option name="comment">"check for numerical instabilities during spinup"</option>
-    </options>
-  </test>
-  <test name="ERS_Ld761_P1536" grid="ne16pg3_ne16pg3_mtn14" compset="I1850Clm60FatesNoComp" testmods="clm/FatesColdNoCompFixedBioGeo">
-    <machines>
+      <machine name="betzy" compiler="intel" category="aux_clm_noresm"/>
       <machine name="olivia" compiler="intel" category="aux_clm_noresm"/>
-    </machines>
-    <options>
-      <option name="wallclock">02:50:00</option>
-      <option name="comment">"check for numerical instabilities during spinup"</option>
-    </options>
-  </test>
-  <test name="ERI_D_Ld11" grid="ne30pg3_ne30pg3_mtn14" compset="I1850Clm60FatesNocompSpinup" testmods="clm/FatesColdSpinupAD">
-    <machines>
-      <machine name="betzy" compiler="gnu" category="aux_clm_noresm"/>
-      <machine name="olivia" compiler="gnu" category="aux_clm_noresm"/>
     </machines>
     <options>
       <option name="wallclock">00:50:00</option>
       <option name="comment">""</option>
     </options>
   </test>
-  <test name="ERI_D_Ld30" grid="f45_f45_mg37" compset="I1850Clm60FatesNocomp" testmods="clm/FatesColdClm60Cam7LndTuningMode">
+
+  <test name="ERS_Ld11_P1536" grid="ne30pg3_ne30pg3_mtn14" compset="NIHISTClm60Nor" testmods="clm/FatesNoresmAllVars">
+    <machines>
+      <machine name="betzy" compiler="intel" category="aux_clm_noresm"/>
+    </machines>
+    <options>
+      <option name="wallclock">00:50:00</option>
+      <option name="comment">""</option>
+    </options>
+  </test>
+
+  <test name="ERS_Ld11" grid="ne30pg3_ne30pg3_mtn14" compset="NIHISTClm60NorCplHist" testmods="clm/FatesNoresmSpinup">
+    <machines>
+      <machine name="olivia" compiler="intel" category="aux_clm_noresm"/>
+    </machines>
+    <options>
+      <option name="wallclock">00:50:00</option>
+      <option name="comment">""</option>
+    </options>
+  </test>
+
+  <test name="SMS_D_Ld1000_P1536" grid="ne30pg3_ne30pg3_mtn14" compset="NI1850Clm60NorSpinup" testmods="clm/FatesColdNorSpinupAD">
     <machines>
       <machine name="betzy" compiler="gnu" category="aux_clm_noresm"/>
-      <machine name="olivia" compiler="gnu" category="aux_clm_noresm"/>
+    </machines>
+    <options>
+      <option name="wallclock">02:50:00</option>
+      <option name="comment">"check for numerical instabilities during spinup"</option>
+    </options>
+  </test>
+  <test name="ERS_D_Ld761_P1408" grid="ne16pg3_ne16pg3_mtn14" compset="NI1850Clm60Fates" testmods="clm/FatesColdNoCompFixedBioGeo">
+    <machines>
+      <machine name="betzy" compiler="gnu" category="aux_clm_noresm"/>
+    </machines>
+    <options>
+      <option name="wallclock">02:50:00</option>
+      <option name="comment">"check if we can run full-fates compset with NCFB settings"</option>
+    </options>
+  </test>
+  <test name="ERS_Ld761_P1536" grid="ne16pg3_ne16pg3_mtn14" compset="NI1850Clm60Fates" testmods="clm/FatesColdNoCompFixedBioGeo">
+    <machines>
+      <machine name="olivia" compiler="intel" category="aux_clm_noresm"/>
+    </machines>
+    <options>
+      <option name="wallclock">02:50:00</option>
+      <option name="comment">"check if we can run full-fates compset with NCFB settings"</option>
+    </options>
+  </test>
+  <test name="ERI_D_Ld11" grid="ne30pg3_ne30pg3_mtn14" compset="NI1850Clm60NorSpinup" testmods="clm/FatesColdNorSpinupAD">
+    <machines>
+      <machine name="betzy" compiler="gnu" category="aux_clm_noresm"/>
+      <!--machine name="olivia" compiler="gnu" category="aux_clm_noresm"/-->
+    </machines>
+    <options>
+      <option name="wallclock">00:50:00</option>
+      <option name="comment">""</option>
+    </options>
+  </test>
+  <test name="ERI_D_Ld20" grid="f45_f45_mg37" compset="I1850Clm60FatesNcfb" testmods="clm/FatesColdClm60Cam7LndTuningMode">
+    <machines>
+      <machine name="betzy" compiler="gnu" category="aux_clm_noresm"/>
+      <machine name="olivia" compiler="intel" category="aux_clm_noresm"/>
     </machines>
     <options>
       <option name="wallclock">00:30:00</option>
       <option name="comment">""</option>
     </options>
   </test>
-  <test name="ERS_D_Ld5" grid="f45_f45_mg37" compset="I2000Clm60Fates" testmods="clm/FatesColdMeganNoComp">
+  <test name="ERS_D_Ld5" grid="ne16pg3_ne16pg3_mtn14" compset="NI1850Clm60Nor" testmods="clm/FatesNoresmDryDep">
     <machines>
-      <machine name="betzy" compiler="intel" category="aux_clm_noresm"/>
+      <machine name="betzy" compiler="gnu" category="aux_clm_noresm"/>
       <machine name="olivia" compiler="intel" category="aux_clm_noresm"/>
     </machines>
     <options>
@@ -5071,34 +5102,14 @@
       <option name="comment">""</option>
     </options>
   </test>
-  <test name="ERS_D_Ld5" grid="f45_f45_mg37" compset="I2000Clm60Fates" testmods="clm/FatesColdDryDepNoComp">
-    <machines>
-      <machine name="betzy" compiler="gnu" category="aux_clm_noresm"/>
-      <machine name="olivia" compiler="intel" category="aux_clm_noresm"/>
-    </machines>
-    <options>
-      <option name="wallclock">00:32:00</option>
-      <option name="comment">""</option>
-    </options>
-  </test>
-  <test name="ERI_D_Ld20" grid="ne16pg3_ne16pg3_mtn14" compset="I2000Clm60FatesRs" testmods="clm/FatesColdNormanNoCompFixedBioGeo">
-    <machines>
-      <machine name="betzy"   compiler="gnu" category="aux_clm_noresm"/>
-      <machine name="olivia"   compiler="gnu" category="aux_clm_noresm"/>
-    </machines>
-    <options>
-      <option name="wallclock">00:30:00</option>
-      <option name="comment">Ensure functionality of two-stream radiation option with nocomp-fixedbiogeo in FATES</option>
-    </options>
-  </test>
-  <test name="SMS_Ld1" grid="f45_f45_mg37" compset="I1850Clm60FatesNoComp" testmods="clm/FatesColdReducedOutput">
+  <test name="SMS_Ld1" grid="f45_f45_mg37" compset="NI1850Clm60Nor" testmods="clm/FatesColdReducedOutput">
     <machines>
       <machine name="betzy" compiler="gnu" category="aux_clm_noresm"/>
       <machine name="olivia" compiler="gnu" category="aux_clm_noresm"/>
     </machines>
     <options>
       <option name="wallclock">00:30:00</option>
-      <option name="comment">Simple test to make sure the basic Fates-SP compset works</option>
+      <option name="comment">Test for reduced output for noresm</option>
     </options>
   </test>
 
@@ -5126,13 +5137,13 @@
     </options>
   </test>
 
-  <test name="ERI_D_Ld80_P1024" grid="ne16pg3_ne16pg3_mtn14" compset="I2000Clm60Fates" testmods="clm/FatesCold">
+  <test name="ERI_D_Ld10_P1024" grid="ne16pg3_ne16pg3_mtn14" compset="NI1850Clm60Fates" testmods="clm/FatesColdNoresm">
     <machines>
-      <machine name="olivia" compiler="gnu" category="aux_clm_noresm"/>
+      <machine name="olivia" compiler="intel" category="aux_clm_noresm"/>
     </machines>
     <options>
       <option name="wallclock">00:50:00</option>
-      <option name="comment">"Will fail in mosart, but check for other fails"</option>
+      <option name="comment">"full-fates test for NorESM"</option>
     </options>
   </test>
   <test name="ERS_D_Ld30" grid="f45_f45_mg37" compset="I2000Clm60FatesRs" testmods="clm/FatesColdPRT2_suplnAll">
@@ -5218,7 +5229,7 @@
   <test name="ERI_Ld9" grid="f45_f45_mg37" compset="I2000Clm60BgcCrop" testmods="clm/default">
     <machines>
       <machine name="betzy" compiler="gnu" category="aux_clm_noresm"/>
-      <machine name="olivia" compiler="gnu" category="aux_clm_noresm"/>
+      <machine name="olivia" compiler="intel" category="aux_clm_noresm"/>
     </machines>
     <options>
       <option name="wallclock">00:20:00</option>
@@ -5255,17 +5266,6 @@
     </machines>
     <options>
       <option name="wallclock">00:20:00</option>
-      <option name="comment">""</option>
-    </options>
-  </test>
-
-  <test name="SMS_Ld761" grid="f19_g17" compset="I2000Clm60BgcCrop" testmods="clm/cropMonthOutput">
-    <machines>
-      <machine name="betzy" compiler="intel" category="aux_clm_noresm"/>
-      <machine name="olivia" compiler="intel" category="aux_clm_noresm"/>
-    </machines>
-    <options>
-      <option name="wallclock">00:50:00</option>
       <option name="comment">""</option>
     </options>
   </test>

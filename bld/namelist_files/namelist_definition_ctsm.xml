@@ -18,6 +18,18 @@ Full pathname of initial conditions file. If blank CLM will startup from
 arbitrary initial conditions.
 </entry>
 
+<entry id="fates_finidat"
+       type="char*512"
+       category="datasets"
+       input_pathname="abs"
+       group="default_settings"
+       valid_values="" >
+Full pathname of initial conditions file for running with fates.
+Fates does not allow for interpolation for initial conditions,
+so  this hidden variable is used instead of finidat when fates is on for finding strict matches.
+This is then passed to normal finidat. This variable will not appear in the user_nl_clm
+</entry>
+
 <entry id="use_init_interp"
        type="logical"
        category="datasets"
@@ -2480,8 +2492,8 @@ NOTE: THIS CORRESPONDS DIRECTLY TO THE env_run.xml VARIABLE OF THE SAME NAME.
       Set the env_run variable, rather than setting this directly.
 </entry>
 
-<entry id="bgc_mode" type="char*5" category="default_settings"
-       group="default_settings" valid_values="sp,bgc,fates" >
+<entry id="bgc_mode" type="char*10" category="default_settings"
+       group="default_settings" valid_values="sp,bgc,fates,fates_sp,fates_ncfb" >
 Command line arguement for biogeochemistry mode for CLM4.5
    sp  = Satellitte Phenology
    bgc = CLM4.5 BGC model with:
@@ -2490,7 +2502,17 @@ Command line arguement for biogeochemistry mode for CLM4.5
         Methane model
         Vertically resolved Carbon
    fates = FATES Functionally Assembled Terrestrial Ecosystem Simulator (ecosystem demography model with below ground BGC):
+   fates_sp = FATES in Satellite Phenology mode
+   fates_ncfb = FATES in no-competition mode and fixed biogeography (with below ground BGC)
 </entry>
+
+<entry id="esm" type="char*8"  category="default_settings"
+       group="default_settings" valid_values="cesm,noresm" >
+Command line argument for picking up correct defaults depending on
+   which ESM's compset has been set. 
+</entry>
+
+
 
 <!-- ========================================================================================  -->
 <!-- namelist elements associated with the vertical CN model                                   -->

@@ -224,7 +224,7 @@ attributes from the config_cache.xml file (with keys converted to upper-case).
 <!-- Albedo for glaciers -->
 <albice               >0.50,0.30</albice>
 <albice phys="clm4_5" >0.60,0.40</albice>
-<albice phys="clm6_0" >0.60,0.40</albice>
+<albice phys="clm6_0" esm="noresm">0.60,0.40</albice>
 <!-- Default urban air conditioning/heating and wasteheat -->
 <urban_hac               >ON_WASTEHEAT</urban_hac>
 <urban_hac phys="clm4_5" >ON</urban_hac>
@@ -556,10 +556,11 @@ attributes from the config_cache.xml file (with keys converted to upper-case).
 <snow_thermal_cond_method phys="clm6_0">Sturm1997</snow_thermal_cond_method>
 
 <snow_thermal_cond_glc_method>Jordan1991</snow_thermal_cond_glc_method>
-<snow_thermal_cond_glc_method phys="clm6_0">Jordan1991</snow_thermal_cond_glc_method>
+<snow_thermal_cond_glc_method phys="clm6_0">Sturm1997</snow_thermal_cond_glc_method>
+<snow_thermal_cond_glc_method phys="clm6_0" esm="noresm">Jordan1991</snow_thermal_cond_glc_method>
 
 <snow_thermal_cond_lake_method>Jordan1991</snow_thermal_cond_lake_method>
-<!--snow_thermal_cond_lake_method phys="clm6_0">c</snow_thermal_cond_lake_method-->
+<snow_thermal_cond_lake_method phys="clm6_0">Sturm1997</snow_thermal_cond_lake_method>
 
 <!-- Default glacier behavior is:
      Mountain glaciers: single_at_atm_topo
@@ -570,8 +571,11 @@ attributes from the config_cache.xml file (with keys converted to upper-case).
      If CISM is running over Antarctica, then we change the Antarctica
      behavior to virtual. Note that the Greenland behavior is always
      virtual, even if Greenland isn't included in this run.
+
+     with FATES we have to always run antarctica with virtual, otherwise we can not use any finidat from a non-antarctica run
 -->
-<glacier_region_behavior glc_use_antarctica="0">'single_at_atm_topo','UNSET','virtual','virtual'</glacier_region_behavior>
+<glacier_region_behavior glc_use_antarctica="0">'single_at_atm_topo','UNSET','virtual','multiple'</glacier_region_behavior>
+<glacier_region_behavior use_fates=".true." esm="noresm">'single_at_atm_topo','UNSET','virtual','virtual'</glacier_region_behavior>
 <glacier_region_behavior glc_use_antarctica="1">'single_at_atm_topo','UNSET','virtual','virtual' </glacier_region_behavior>
 
 <!-- Default glacier melt behavior is:
@@ -600,10 +604,12 @@ attributes from the config_cache.xml file (with keys converted to upper-case).
 <!-- ================================================================== -->
 <!-- The default filenames are given relative to the root directory
      for the CLM2 data in the CESM distribution -->
-<!-- Plant function types (relative to {csmdata}) -->
-<paramfile phys="clm6_0" >lnd/clm2/paramdata/ctsm60_params.c260303.nc</paramfile>
-<paramfile phys="clm6_0" lnd_tuning_mode="clm6_0_cam7.0">lnd/clm2/paramdata/ctsm60-cam70_params.c260305.nc</paramfile>
-<paramfile phys="clm6_0" use_fates=".true.">lnd/clm2/paramdata/ctsm60_params.noresm.c260406.nc</paramfile>
+<!-- CLM parameter files (relative to {csmdata}) -->
+<paramfile phys="clm6_0">lnd/clm2/paramdata/ctsm60_params.c260518.nc</paramfile>
+<paramfile phys="clm6_0" esm="cesm">lnd/clm2/paramdata/ctsm60_params.c260518.nc</paramfile>
+<paramfile phys="clm6_0" use_fates=".true." esm="noresm">lnd/clm2/paramdata/ctsm60_params.noresm.c260508.nc</paramfile>
+<paramfile phys="clm6_0" esm="cesm" lnd_tuning_mode="clm6_0_cam7.0">lnd/clm2/paramdata/ctsm60-cam70_params.c260518.nc</paramfile>
+<paramfile phys="clm6_0" use_hillslope=".true.">lnd/clm2/paramdata/ctsm60-HH_params.c260518.nc</paramfile>
 <paramfile phys="clm5_0" >lnd/clm2/paramdata/clm50_params.c260305.nc</paramfile>
 <paramfile phys="clm4_5" >lnd/clm2/paramdata/clm45_params.c260305.nc</paramfile>
 
@@ -611,8 +617,8 @@ attributes from the config_cache.xml file (with keys converted to upper-case).
 <!-- FATES default parameter file                                       -->
 <!-- path is relative to the land root (ie the path to CTSM)            -->
 <!-- ================================================================== -->
-
-<fates_paramfile>src/fates/parameter_files/fates_params_noresm.json</fates_paramfile>
+<fates_paramfile>src/fates/parameter_files/fates_params_default.json</fates_paramfile>
+<fates_paramfile esm="noresm">src/fates/parameter_files/fates_params_noresm.json</fates_paramfile>
 
 <!-- ================================================================== -->
 <!-- Default surface roughness parameterization                         -->
@@ -1817,6 +1823,47 @@ attributes from the config_cache.xml file (with keys converted to upper-case).
 >lnd/clm2/initdata_map/clmi.FHISTSp.2013-01-01.ne0CONUSne30x8_mt12_simyr2013_c200806.nc
 </finidat>
 
+<!--since fates cannot have use_init_interp=true and finding finidat for it requires different attributes:
+    We use this hidden variable fates_finidat and then pass it to finidat when fates is on-->
+<!--ne16-->
+<!-- piControl and historical CRUJRA-->
+<fates_finidat hgrid="ne16np4.pg3" mask="tnx1v4" bgc_mode="fates_ncfb" esm="noresm" sim_year_range="constant"
+               lnd_tuning_mode="clm6_0_CRUJRA2024" phys="clm6_0" glc_nec="10" sim_year="1850"
+>lnd/clm2/initdata_esmf/ctsm5.4/NorESM/i1850.ne16pg3_tn14.ctsm5.4.036_noresm_v0.CPLHIST_postADspinup_olv.2026-05-15.clm2.r.0801-01-01-00000.nc</fates_finidat>
+
+<fates_finidat hgrid="ne16np4.pg3" mask="tnx1v4" bgc_mode="fates_ncfb" esm="noresm" sim_year_range="1850-2000"
+               lnd_tuning_mode="clm6_0_CRUJRA2024" phys="clm6_0" glc_nec="10"  ic_ymd="18500101"
+>lnd/clm2/initdata_esmf/ctsm5.4/NorESM/i1850.ne16pg3_tn14.ctsm5.4.036_noresm_v0.CPLHIST_postADspinup_olv.2026-05-15.clm2.r.0801-01-01-00000.nc</fates_finidat>
+
+<!-- piControl and historical with CAM7-->
+<fates_finidat hgrid="ne16np4.pg3" mask="tnx1v4" bgc_mode="fates_ncfb" esm="noresm" sim_year_range="constant"
+               lnd_tuning_mode="clm6_0_cam7.0" phys="clm6_0" glc_nec="10" sim_year="1850"
+>lnd/clm2/initdata_esmf/ctsm5.4/NorESM/i1850.ne16pg3_tn14.ctsm5.4.036_noresm_v0.CPLHIST_postADspinup_olv.2026-05-15.clm2.r.0801-01-01-00000.nc</fates_finidat>
+
+<fates_finidat hgrid="ne16np4.pg3" mask="tnx1v4"  bgc_mode="fates_ncfb" esm="noresm" sim_year_range="1850-2000"
+               lnd_tuning_mode="clm6_0_cam7.0" phys="clm6_0" glc_nec="10"  ic_ymd="18500101"
+>lnd/clm2/initdata_esmf/ctsm5.4/NorESM/i1850.ne16pg3_tn14.ctsm5.4.036_noresm_v0.CPLHIST_postADspinup_olv.2026-05-15.clm2.r.0801-01-01-00000.nc</fates_finidat>
+
+<!--ne30-->
+<!-- piControl and historical CRUJRA-->
+<fates_finidat hgrid="ne30np4.pg3" mask="tnx1v4" bgc_mode="fates_ncfb" esm="noresm" sim_year_range="constant"
+               lnd_tuning_mode="clm6_0_CRUJRA2024" phys="clm6_0" glc_nec="10" sim_year="1850"
+>lnd/clm2/initdata_esmf/ctsm5.4/NorESM/i1850.ne30pg3_tn14.ctsm5.4.036_noresm_v0.CPLHIST_postADspinup.2026-05-24.clm2.r.0451-01-01-00000.nc</fates_finidat>
+
+<fates_finidat hgrid="ne30np4.pg3" mask="tnx1v4" sim_year="1850" bgc_mode="fates_ncfb" esm="noresm" sim_year_range="1850-2000"
+               lnd_tuning_mode="clm6_0_CRUJRA2024" phys="clm6_0" glc_nec="10"  ic_ymd="18500101"
+>lnd/clm2/initdata_esmf/ctsm5.4/NorESM/i1850.ne30pg3_tn14.ctsm5.4.036_noresm_v0.CPLHIST_postADspinup.2026-05-24.clm2.r.0451-01-01-00000.nc</fates_finidat>
+
+<!-- piControl and historical with CAM7-->
+<fates_finidat hgrid="ne30np4.pg3" mask="tnx1v4" bgc_mode="fates_ncfb" esm="noresm" sim_year_range="constant"
+               lnd_tuning_mode="clm6_0_cam7.0" phys="clm6_0" glc_nec="10" sim_year="1850"
+>lnd/clm2/initdata_esmf/ctsm5.4/NorESM/i1850.ne30pg3_tn14.ctsm5.4.036_noresm_v0.CPLHIST_postADspinup.2026-05-24.clm2.r.0451-01-01-00000.nc</fates_finidat>
+
+<fates_finidat hgrid="ne30np4.pg3" mask="tnx1v4" sim_year="1850" bgc_mode="fates_ncfb" esm="noresm" sim_year_range="1850-2000"
+               lnd_tuning_mode="clm6_0_cam7.0" phys="clm6_0" glc_nec="10"  ic_ymd="18500101"
+>lnd/clm2/initdata_esmf/ctsm5.4/NorESM/i1850.ne30pg3_tn14.ctsm5.4.036_noresm_v0.CPLHIST_postADspinup.2026-05-24.clm2.r.0451-01-01-00000.nc</fates_finidat>
+
+
 
 <!-- for present day simulations - year 2000 -->
 
@@ -2164,6 +2211,26 @@ lnd/clm2/surfdata_esmf/NEON/ctsm5.4.0/surfdata_1x1_NEON_TOOL_hist_2000_78pfts_c2
 <!-- This one is just for testing until Issue #2304 is resolved -->
 <fluh_timeseries hgrid="4x5" sim_year_range="constant" use_fates=".true."
  >lnd/clm2/surfdata_map/fates-sci.1.68.3_api.31.0.0_tools.1.0.1/LUH2_states_transitions_management.timeseries_4x5_hist_simyr0850-2015_c240216.no_nan_fill.nc</fluh_timeseries>
+<!-- NorESM specific files for ne30 and ne16 grids-->
+<flandusepftdat hgrid="ne16np4.pg3" use_fates=".true." esm="noresm"
+>lnd/clm2/surfdata_esmf/ctsm5.4.0/fates_LU_data_CMIP7/fates_landuse_pft_surfdata_ne16np4_c260508.nc</flandusepftdat>
+<flandusepftdat hgrid="ne30np4.pg3" use_fates=".true." esm="noresm"
+>lnd/clm2/surfdata_esmf/ctsm5.4.0/fates_LU_data_CMIP7/fates_landuse_pft_surfdata_ne30np4_c260513.nc</flandusepftdat>
+
+<fluh_timeseries hgrid="ne30np4.pg3" sim_year_range="constant" sim_year="1850" use_fates=".true." esm="noresm"
+>lnd/clm2/surfdata_esmf/ctsm5.4.0/fates_LU_data_CMIP7/LUH3_1850_steadystate_ne30np4_c260515.nc</fluh_timeseries>
+<fluh_timeseries hgrid="ne30np4.pg3" sim_year_range="constant" sim_year="2000" use_fates=".true." esm="noresm"
+>lnd/clm2/surfdata_esmf/ctsm5.4.0/fates_LU_data_CMIP7/LUH3_2000_steadystate_ne30_c260605.nc</fluh_timeseries>
+<fluh_timeseries hgrid="ne30np4.pg3" sim_year_range="1850-2000" sim_year="1850" use_fates=".true." esm="noresm"
+>lnd/clm2/surfdata_esmf/ctsm5.4.0/fates_LU_data_CMIP7/LUH3_timeseries_850-2024_surfdata_ne30np4_c260603.nc</fluh_timeseries>
+
+<fluh_timeseries hgrid="ne16np4.pg3" sim_year_range="constant" sim_year="1850" use_fates=".true." esm="noresm"
+>lnd/clm2/surfdata_esmf/ctsm5.4.0/fates_LU_data_CMIP7/LUH3_1850_steadystate_ne16np4_c260508.nc</fluh_timeseries>
+<fluh_timeseries hgrid="ne16np4.pg3" sim_year_range="constant" sim_year="2000" use_fates=".true." esm="noresm"
+>lnd/clm2/surfdata_esmf/ctsm5.4.0/fates_LU_data_CMIP7/LUH3_2000_steadystate_ne16_c260605.nc</fluh_timeseries>
+<fluh_timeseries hgrid="ne16np4.pg3" sim_year_range="1850-2000" sim_year="1850" use_fates=".true." esm="noresm"
+>lnd/clm2/surfdata_esmf/ctsm5.4.0/fates_LU_data_CMIP7/LUH3_timeseries_850-2024_surfdata_ne16np4_c260603.nc</fluh_timeseries>
+
 
 <!-- Fixation and Uptake of Nitrogen Model (FUN2.0) -->
 <use_fun                                                            >.false.</use_fun>
@@ -2696,17 +2763,23 @@ lnd/clm2/surfdata_esmf/NEON/ctsm5.4.0/surfdata_1x1_NEON_TOOL_hist_2000_78pfts_c2
 <!-- ===== FATES DEFAULTS =========== -->
 <fates_electron_transport_model use_fates=".true.">FvCB1980</fates_electron_transport_model>
 <fates_photosynth_acclimation   use_fates=".true.">nonacclimating</fates_photosynth_acclimation>
-<fates_spitfire_mode            use_fates=".true.">4</fates_spitfire_mode>
+<fates_spitfire_mode            use_fates=".true.">1</fates_spitfire_mode>
+<fates_spitfire_mode            use_fates=".true." ems="noresm">4</fates_spitfire_mode>
 <fates_spitfire_mode            use_fates=".true." use_fates_sp=".true.">0</fates_spitfire_mode>
 <fates_harvest_mode             use_fates=".true.">no_harvest</fates_harvest_mode>
+<fates_harvest_mode             use_fates=".true." use_fates_sp=".false." sim_year="1850" esm="noresm" hgrid="ne16np4.pg3">luhdata_area</fates_harvest_mode>
+<fates_harvest_mode             use_fates=".true." use_fates_sp=".false." sim_year="1850" esm="noresm" hgrid="ne30np4.pg3">luhdata_area</fates_harvest_mode>
 <fates_lu_transition_logic      use_fates=".true.">4</fates_lu_transition_logic> <!--Default value of 4 means vegetation
  is not cleared during land use change transitions to rangeland, but is cleared in transitions to pasture and croplands -->
+<fates_lu_transition_logic      use_fates=".true." esm="noresm" use_fates_luh=".true">1</fates_lu_transition_logic>
 <fates_stomatal_model           use_fates=".true.">ballberry1987</fates_stomatal_model>
+<fates_stomatal_model           use_fates=".true." esm="noresm">medlyn2011</fates_stomatal_model>
 <fates_stomatal_assimilation    use_fates=".true.">net</fates_stomatal_assimilation>
 <fates_leafresp_model           use_fates=".true.">ryan1991</fates_leafresp_model>
 <fates_cstarvation_model        use_fates=".true.">linear</fates_cstarvation_model>
 <fates_regeneration_model       use_fates=".true.">default</fates_regeneration_model>
-<fates_radiation_model          use_fates=".true.">twostream</fates_radiation_model>
+<fates_radiation_model          use_fates=".true.">norman</fates_radiation_model>
+<fates_radiation_model          use_fates=".true." esm="noresm">twostream</fates_radiation_model>
 <fates_hydro_solver             use_fates=".true.">2D_Picard</fates_hydro_solver>
 <use_fates_managed_fire         use_fates=".true.">.false.</use_fates_managed_fire>
 <use_fates_planthydro           use_fates=".true.">.false.</use_fates_planthydro>
@@ -2717,8 +2790,12 @@ lnd/clm2/surfdata_esmf/NEON/ctsm5.4.0/surfdata_1x1_NEON_TOOL_hist_2000_78pfts_c2
 <use_fates_ed_prescribed_phys   use_fates=".true.">.false.</use_fates_ed_prescribed_phys>
 <use_fates_inventory_init       use_fates=".true.">.false.</use_fates_inventory_init>
 <use_fates_dbh_init             use_fates=".true.">.false.</use_fates_dbh_init>
-<use_fates_dbh_init             use_fates=".true." use_fates_nocomp=".true." >.true.</use_fates_dbh_init>
+<use_fates_dbh_init             use_fates=".true." use_fates_nocomp=".true." esm='noresm'>.true.</use_fates_dbh_init>
 <use_fates_sp                   use_fates=".true.">.false.</use_fates_sp>
+<use_fates_lupft                use_fates=".true." bgc_mode="fates_ncfb" sim_year="1850" esm="noresm" hgrid="ne16np4.pg3">.true.</use_fates_lupft>
+<use_fates_lupft                use_fates=".true." bgc_mode="fates_ncfb" sim_year="1850" esm="noresm" hgrid="ne30np4.pg3">.true.</use_fates_lupft>
+<use_fates_lupft                use_fates=".true." bgc_mode="fates_ncfb" sim_year="2000" esm="noresm" hgrid="ne16np4.pg3">.true.</use_fates_lupft>
+<use_fates_lupft                use_fates=".true." bgc_mode="fates_ncfb" sim_year="2000" esm="noresm" hgrid="ne30np4.pg3">.true.</use_fates_lupft>
 <use_fates_lupft                use_fates=".true.">.false.</use_fates_lupft>
 <use_fates_potentialveg         use_fates=".true.">.false.</use_fates_potentialveg>
 <use_fates_luh                  use_fates=".true." fates_harvest_mode="luhdata_area"  >.true.</use_fates_luh>
@@ -2726,14 +2803,15 @@ lnd/clm2/surfdata_esmf/NEON/ctsm5.4.0/surfdata_1x1_NEON_TOOL_hist_2000_78pfts_c2
 <use_fates_luh                  use_fates=".true." use_fates_lupft=".true.">.true.</use_fates_luh>
 <use_fates_luh                  use_fates=".true." use_fates_potentialveg=".true.">.true.</use_fates_luh>
 <use_fates_luh                  use_fates=".true."                                >.false.</use_fates_luh>
-<fates_lu_transition_logic      use_fates=".true." use_fates_luh=".true." >1</fates_lu_transition_logic>
 <fates_parteh_mode              use_fates=".true.">carbon_only</fates_parteh_mode>
 <fates_seeddisp_cadence         use_fates=".true.">0</fates_seeddisp_cadence>
 <use_fates_nocomp               use_fates=".true." use_fates_sp=".true."   >.true.</use_fates_nocomp>
 <use_fates_nocomp               use_fates=".true." use_fates_lupft=".true.">.true.</use_fates_nocomp>
+<use_fates_nocomp               use_fates=".true." bgc_mode="fates_ncfb">.true.</use_fates_nocomp>
 <use_fates_nocomp               use_fates=".true."                         >.false.</use_fates_nocomp>
 <use_fates_fixed_biogeog        use_fates=".true." use_fates_sp=".true."   >.true.</use_fates_fixed_biogeog>
 <use_fates_fixed_biogeog        use_fates=".true." use_fates_lupft=".true.">.true.</use_fates_fixed_biogeog>
+<use_fates_fixed_biogeog        use_fates=".true." bgc_mode="fates_ncfb">.true.</use_fates_fixed_biogeog>
 <use_fates_fixed_biogeog        use_fates=".true."                         >.false.</use_fates_fixed_biogeog>
 <fates_history_dimlevel         use_fates=".true.">2,2</fates_history_dimlevel>
 
@@ -2747,9 +2825,12 @@ lnd/clm2/surfdata_esmf/NEON/ctsm5.4.0/surfdata_1x1_NEON_TOOL_hist_2000_78pfts_c2
 <!-- Defaults for dynamic subgrid               -->
 <!-- (some other defaults for dynamic subgrid   -->
 <!-- are set in the BuildNamelist code)         -->
+<!-- for now, fates can not start with transient things -->
 <!-- =========================================  -->
 <do_transient_lakes>.false.</do_transient_lakes>
+<do_transient_lakes use_fates=".true.">.false.</do_transient_lakes>
 <do_transient_urban>.false.</do_transient_urban>
+<do_transient_urban use_fates=".true">.false.</do_transient_urban>
 <reset_dynbal_baselines>.false.</reset_dynbal_baselines>
 <vars_1dwt_w_time do_transient_pfts=".true.">.true.</vars_1dwt_w_time>
 <vars_1dwt_w_time do_transient_crops=".true.">.true.</vars_1dwt_w_time>
