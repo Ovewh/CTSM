@@ -2219,11 +2219,15 @@ lnd/clm2/surfdata_esmf/NEON/ctsm5.4.0/surfdata_1x1_NEON_TOOL_hist_2000_78pfts_c2
 
 <fluh_timeseries hgrid="ne30np4.pg3" sim_year_range="constant" sim_year="1850" use_fates=".true." esm="noresm"
 >lnd/clm2/surfdata_esmf/ctsm5.4.0/fates_LU_data_CMIP7/LUH3_1850_steadystate_ne30np4_c260515.nc</fluh_timeseries>
+<fluh_timeseries hgrid="ne30np4.pg3" sim_year_range="constant" sim_year="2000" use_fates=".true." esm="noresm"
+>lnd/clm2/surfdata_esmf/ctsm5.4.0/fates_LU_data_CMIP7/LUH3_2000_steadystate_ne30_c260605.nc</fluh_timeseries>
 <fluh_timeseries hgrid="ne30np4.pg3" sim_year_range="1850-2000" sim_year="1850" use_fates=".true." esm="noresm"
 >lnd/clm2/surfdata_esmf/ctsm5.4.0/fates_LU_data_CMIP7/LUH3_timeseries_850-2024_surfdata_ne30np4_c260603.nc</fluh_timeseries>
 
 <fluh_timeseries hgrid="ne16np4.pg3" sim_year_range="constant" sim_year="1850" use_fates=".true." esm="noresm"
 >lnd/clm2/surfdata_esmf/ctsm5.4.0/fates_LU_data_CMIP7/LUH3_1850_steadystate_ne16np4_c260508.nc</fluh_timeseries>
+<fluh_timeseries hgrid="ne16np4.pg3" sim_year_range="constant" sim_year="2000" use_fates=".true." esm="noresm"
+>lnd/clm2/surfdata_esmf/ctsm5.4.0/fates_LU_data_CMIP7/LUH3_2000_steadystate_ne16_c260605.nc</fluh_timeseries>
 <fluh_timeseries hgrid="ne16np4.pg3" sim_year_range="1850-2000" sim_year="1850" use_fates=".true." esm="noresm"
 >lnd/clm2/surfdata_esmf/ctsm5.4.0/fates_LU_data_CMIP7/LUH3_timeseries_850-2024_surfdata_ne16np4_c260603.nc</fluh_timeseries>
 
@@ -2790,8 +2794,8 @@ lnd/clm2/surfdata_esmf/NEON/ctsm5.4.0/surfdata_1x1_NEON_TOOL_hist_2000_78pfts_c2
 <use_fates_sp                   use_fates=".true.">.false.</use_fates_sp>
 <use_fates_lupft                use_fates=".true." bgc_mode="fates_ncfb" sim_year="1850" esm="noresm" hgrid="ne16np4.pg3">.true.</use_fates_lupft>
 <use_fates_lupft                use_fates=".true." bgc_mode="fates_ncfb" sim_year="1850" esm="noresm" hgrid="ne30np4.pg3">.true.</use_fates_lupft>
-<use_fates_lupft                use_fates=".true." bgc_mode="fates_ncfb" sim_year="2000" esm="noresm" hgrid="ne16np4.pg3">.false.</use_fates_lupft>
-<use_fates_lupft                use_fates=".true." bgc_mode="fates_ncfb" sim_year="2000" esm="noresm" hgrid="ne30np4.pg3">.false.</use_fates_lupft>
+<use_fates_lupft                use_fates=".true." bgc_mode="fates_ncfb" sim_year="2000" esm="noresm" hgrid="ne16np4.pg3">.true.</use_fates_lupft>
+<use_fates_lupft                use_fates=".true." bgc_mode="fates_ncfb" sim_year="2000" esm="noresm" hgrid="ne30np4.pg3">.true.</use_fates_lupft>
 <use_fates_lupft                use_fates=".true.">.false.</use_fates_lupft>
 <use_fates_potentialveg         use_fates=".true.">.false.</use_fates_potentialveg>
 <use_fates_luh                  use_fates=".true." fates_harvest_mode="luhdata_area"  >.true.</use_fates_luh>
