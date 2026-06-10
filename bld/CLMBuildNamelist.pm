@@ -5035,7 +5035,7 @@ sub setup_logic_fates {
 
         foreach my $var ( @list ) {
            add_default($opts, $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl, $var, 'use_fates'=>$nl_flags->{'use_fates'},
-                       'hgrid'=>$nl_flags->{'res'}, 'bgc_mode'=>$nl_flags->{'bgc_mode'},
+                       'hgrid'=>$nl_flags->{'res'}, 'bgc_mode'=>$nl_flags->{'bgc_mode'}, 'clm_accelerated_spinup'=>$nl_flags->{'clm_accelerated_spinup'}, 
                        'use_fates_sp'=>$nl_flags->{'use_fates_sp'},'use_fates_nocomp'=>$nl_flags->{'use_fates_nocomp'}, 'esm'=>$nl_flags->{'esm'});
         }
         add_default($opts, $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl,"fates_harvest_mode", 'use_fates'=>$nl_flags->{'use_fates'},
