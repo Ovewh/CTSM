@@ -7,3 +7,4 @@
 ./xmlchange LND_TUNING_MODE="clm6_0_cam7.0"
 ./xmlchange ROF_NCPL='$ATM_NCPL'
 ./xmlchange CLM_ACCELERATED_SPINUP=on
+./xmlchange CLM_FORCE_COLDSTART=on

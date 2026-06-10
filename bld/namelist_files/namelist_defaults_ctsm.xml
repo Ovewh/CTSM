@@ -74,7 +74,7 @@ attributes from the config_cache.xml file (with keys converted to upper-case).
 <hist_fincl1 clm_accelerated_spinup="on" use_cn=".true."
 >'TOTECOSYSC','TOTECOSYSN','TOTSOMC','TOTSOMN','TOTVEGC','TOTVEGN','TLAI','GPP','CPOOL','NPP','TWS','H2OSNO'</hist_fincl1>
 <hist_fincl1 clm_accelerated_spinup="on" use_fates=".true."
->'TOTSOMC','TOTSOMN','TLAI','GPP','NPP','TWS','H2OSNO'</hist_fincl1>
+>'TOTSOMC','TOTSOMN','TLAI','FATES_VEGC','FATES_GPP','FATES_NPP','TOTEXICE_VOL','ALTMAX','TWS','H2OSNO'</hist_fincl1>
 <hist_fincl1 clm_accelerated_spinup="on" use_cn=".false."
 >'TLAI','TWS','H2OSNO'</hist_fincl1>
 <hist_fincl1 clm_accelerated_spinup="sasu" use_cn=".true." use_cndv=".true."
@@ -82,7 +82,7 @@ attributes from the config_cache.xml file (with keys converted to upper-case).
 <hist_fincl1 clm_accelerated_spinup="sasu" use_cn=".true."
 >'TOTECOSYSC','TOTECOSYSN','TOTSOMC','TOTSOMN','TOTVEGC','TOTVEGN','TLAI','GPP','CPOOL','NPP','TWS','H2OSNO'</hist_fincl1>
 <hist_fincl1 clm_accelerated_spinup="sasu" use_fates=".true."
->'TOTSOMC','TOTSOMN','TLAI','GPP','NPP','TWS','H2OSNO'</hist_fincl1>
+>'TOTSOMC','TOTSOMN','TLAI','FATES_VEGC','FATES_GPP','FATES_NPP','TOTEXICE_VOL','ALTMAX','TWS','H2OSNO'</hist_fincl1>
 <hist_nhtfrq clm_accelerated_spinup="on"  >-8760</hist_nhtfrq>
 <hist_nhtfrq clm_accelerated_spinup="sasu">-8760</hist_nhtfrq>
 <hist_mfilt  clm_accelerated_spinup="on"  >20</hist_mfilt>
@@ -554,6 +554,7 @@ attributes from the config_cache.xml file (with keys converted to upper-case).
 
 <snow_thermal_cond_method>Jordan1991</snow_thermal_cond_method>
 <snow_thermal_cond_method phys="clm6_0">Sturm1997</snow_thermal_cond_method>
+<snow_thermal_cond_method phys="clm6_0" esm="noresm">Sturm1997</snow_thermal_cond_method>
 
 <snow_thermal_cond_glc_method>Jordan1991</snow_thermal_cond_glc_method>
 <snow_thermal_cond_glc_method phys="clm6_0">Sturm1997</snow_thermal_cond_glc_method>
@@ -561,6 +562,7 @@ attributes from the config_cache.xml file (with keys converted to upper-case).
 
 <snow_thermal_cond_lake_method>Jordan1991</snow_thermal_cond_lake_method>
 <snow_thermal_cond_lake_method phys="clm6_0">Sturm1997</snow_thermal_cond_lake_method>
+<snow_thermal_cond_lake_method phys="clm6_0" esm="noresm">Jordan1991</snow_thermal_cond_lake_method>
 
 <!-- Default glacier behavior is:
      Mountain glaciers: single_at_atm_topo
@@ -2764,8 +2766,9 @@ lnd/clm2/surfdata_esmf/NEON/ctsm5.4.0/surfdata_1x1_NEON_TOOL_hist_2000_78pfts_c2
 <fates_electron_transport_model use_fates=".true.">FvCB1980</fates_electron_transport_model>
 <fates_photosynth_acclimation   use_fates=".true.">nonacclimating</fates_photosynth_acclimation>
 <fates_spitfire_mode            use_fates=".true.">1</fates_spitfire_mode>
-<fates_spitfire_mode            use_fates=".true." ems="noresm">4</fates_spitfire_mode>
+<fates_spitfire_mode            use_fates=".true." esm="noresm">4</fates_spitfire_mode>
 <fates_spitfire_mode            use_fates=".true." use_fates_sp=".true.">0</fates_spitfire_mode>
+<fates_spitfire_mode            use_fates=".true." use_fates_sp=".true." esm="noresm">0</fates_spitfire_mode>
 <fates_harvest_mode             use_fates=".true.">no_harvest</fates_harvest_mode>
 <fates_harvest_mode             use_fates=".true." use_fates_sp=".false." sim_year="1850" esm="noresm" hgrid="ne16np4.pg3">luhdata_area</fates_harvest_mode>
 <fates_harvest_mode             use_fates=".true." use_fates_sp=".false." sim_year="1850" esm="noresm" hgrid="ne30np4.pg3">luhdata_area</fates_harvest_mode>
@@ -2814,6 +2817,8 @@ lnd/clm2/surfdata_esmf/NEON/ctsm5.4.0/surfdata_1x1_NEON_TOOL_hist_2000_78pfts_c2
 <use_fates_fixed_biogeog        use_fates=".true." bgc_mode="fates_ncfb">.true.</use_fates_fixed_biogeog>
 <use_fates_fixed_biogeog        use_fates=".true."                         >.false.</use_fates_fixed_biogeog>
 <fates_history_dimlevel         use_fates=".true.">2,2</fates_history_dimlevel>
+<fates_history_dimlevel         use_fates=".true." clm_accelerated_spinup="on">2,1</fates_history_dimlevel>
+<fates_history_dimlevel         use_fates=".true." clm_accelerated_spinup="sasu">2,1</fates_history_dimlevel>
 
 <!-- Supplmental Nitrogen mode -->
 <!-- FATES carbon_only needs suplnitro set to ALL. -->
