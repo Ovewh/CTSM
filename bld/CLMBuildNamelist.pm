@@ -2749,6 +2749,7 @@ sub setup_logic_initial_conditions {
         $finidat = $finidatf;
         add_default($opts,  $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl,
                 $var, 'val'=>$finidatf);
+         $nl_flags->{'excess_ice_on_finidat'} = $nl_flags->{'use_excess_ice'};
      } else { 
         add_default($opts,  $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl,
                 $var, 'val'=>"' '", 'no_abspath'=>1);
@@ -5346,7 +5347,7 @@ sub setup_logic_exice_streams {
   # Checking for cold clm_start_type and not finidat here since finidat can be not set set in branch/hybrid runs and
   # These cases are handled in the restart routines in the model
   } elsif ( defined($use_exice_streams) && (not value_is_true($use_exice_streams)) && value_is_true($use_exice) &&
-          ( $nl_flags->{'clm_start_type'} eq "'cold'" || $nl_flags->{'clm_start_type'} eq "'arb_ic'" )) {
+          ( $nl_flags->{'clm_start_type'} eq "'cold'" || ($nl_flags->{'clm_start_type'} eq "'arb_ic'" && string_is_undef_or_empty($finidat)))) {
      $log->fatal_error("use_excess_ice_streams can NOT be FALSE when use_excess_ice is TRUE on the cold start" );
   }
 
