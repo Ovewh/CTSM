@@ -4326,6 +4326,7 @@ sub setup_logic_dry_deposition {
                 "esm"=>$nl_flags->{'esm'});
     add_default($opts,  $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl, 'dep_data_file', "use_fates"=>$nl_flags->{'use_fates'},
                 "esm"=>$nl_flags->{'esm'});
+    add_default($opts,  $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl, 'so2_dryvel_scalefact');
     &remove_newlines( $nl, $definition, "drydep_list" );
   }
   # fates-sp will set use_fates_nocomp in the setup logic for fates earlier

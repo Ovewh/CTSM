@@ -85,6 +85,14 @@
     Henry's law coefficients.
   </entry>
 
+  <entry id="so2_dryvel_scalefact"
+         type="real"
+         category="dry-deposition"
+         group="drydep_inparm"
+         valid_values="" >
+    Scale factor applied to the SO2 dry deposition velocity. Default is 1.0 (no scaling).
+  </entry>
+
   <!-- ========================================================================================  -->
   <!-- Nitrogen deposition -->
   <!-- ========================================================================================  -->

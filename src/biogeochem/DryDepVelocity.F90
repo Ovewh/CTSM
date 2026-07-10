@@ -60,7 +60,7 @@ Module DryDepVelocity
   use clm_time_manager     , only : get_nstep, get_curr_date, get_curr_time
   use clm_varcon           , only : ispval
   use spmdMod              , only : masterproc
-  use shr_drydep_mod       , only : n_drydep, drydep_list
+  use shr_drydep_mod       , only : n_drydep, drydep_list, so2_dryvel_scalefact
   use shr_drydep_mod       , only : index_o3=>o3_ndx, index_o3a=>o3a_ndx, index_so2=>so2_ndx, index_h2=>h2_ndx
   use shr_drydep_mod       , only : index_co=>co_ndx, index_ch4=>ch4_ndx, index_pan=>pan_ndx
   use shr_drydep_mod       , only : index_xpan=>xpan_ndx
@@ -711,7 +711,7 @@ CONTAINS
                case ( 'CB1', 'CB2', 'OC1', 'OC2', 'SOAM', 'SOAI', 'SOAT', 'SOAB', 'SOAX' )
                   velocity(pi,ispec) = 0.10_r8
                case ( 'SO2' )
-                  velocity(pi,ispec) = (1._r8/(ram1(pi)+rb1(pi)+rc))*200._r8
+                  velocity(pi,ispec) = (1._r8/(ram1(pi)+rb1(pi)+rc))*200._r8*so2_dryvel_scalefact
                case default
                   velocity(pi,ispec) = (1._r8/(ram1(pi)+rb1(pi)+rc))*100._r8
                end select
