@@ -5326,7 +5326,7 @@
       <option name="comment">""</option>
     </options>
   </test>
-  <test name="ERI_Ld1095" grid="1x1_brazil" compset="NIHISTClm60Nor" testmods="clm/FatesNoresmCMIP7deck">
+  <test name="ERI_Ld1095" grid="1x1_brazil" compset="NI1850Clm60Nor" testmods="clm/FatesNoresmCMIP7deck">
     <machines>
       <machine name="betzy" compiler="gnu" category="aux_clm_noresm"/>
       <machine name="olivia" compiler="intel" category="aux_clm_noresm"/>
