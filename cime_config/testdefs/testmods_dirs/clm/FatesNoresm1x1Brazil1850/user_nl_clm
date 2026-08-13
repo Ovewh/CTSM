@@ -1,0 +1,4 @@
+fates_harvest_mode='luhdata_area'
+use_fates_lupft=.true.
+flandusepftdat='$DIN_LOC_ROOT/lnd/clm2/surfdata_esmf/ctsm5.4.0/fates_LU_data_CMIP7/fates_landuse_pft_surfdata_1x1brazil_c260812.nc'
+fluh_timeseries='$DIN_LOC_ROOT/lnd/clm2/surfdata_esmf/ctsm5.4.0/fates_LU_data_CMIP7/LUH3_1850_steadystate_1x1brazil_c260812.nc'

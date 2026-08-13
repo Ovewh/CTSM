@@ -5306,7 +5306,7 @@
   </test>
 
 <!-- CMIP7 output-->
-  <test name="ERS_Ld760" grid="1x1_brazil" compset="NIHISTClm60Nor" testmods="clm/FatesNoresmCMIP7hf">
+  <test name="ERS_Ld760" grid="1x1_brazil" compset="NIHISTClm60Nor" testmods="clm/FatesNoresmCMIP7hf--clm/FatesNoresm1x1Brazil1850">
     <machines>
       <machine name="betzy" compiler="intel" category="aux_clm_noresm"/>
       <machine name="olivia" compiler="intel" category="aux_clm_noresm"/>
@@ -5316,7 +5316,7 @@
       <option name="comment">""</option>
     </options>
   </test>
-  <test name="ERS_Ld760" grid="1x1_brazil" compset="NIHISTClm60Nor" testmods="clm/FatesNoresmCMIP7deck">
+  <test name="ERS_Ld760" grid="1x1_brazil" compset="NIHISTClm60Nor" testmods="clm/FatesNoresmCMIP7deck--clm/FatesNoresm1x1Brazil1850">
     <machines>
       <machine name="betzy" compiler="intel" category="aux_clm_noresm"/>
       <machine name="olivia" compiler="intel" category="aux_clm_noresm"/>
@@ -5326,7 +5326,7 @@
       <option name="comment">""</option>
     </options>
   </test>
-  <test name="ERI_Ly8" grid="1x1_brazil" compset="NI1850Clm60Nor" testmods="clm/FatesNoresmCMIP7deck">
+  <test name="ERI_Ly8" grid="1x1_brazil" compset="NI1850Clm60Nor" testmods="clm/FatesNoresmCMIP7deck--clm/FatesNoresm1x1Brazil1850">
     <machines>
       <machine name="betzy" compiler="gnu" category="aux_clm_noresm"/>
       <machine name="olivia" compiler="intel" category="aux_clm_noresm"/>
