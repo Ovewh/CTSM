@@ -5312,7 +5312,7 @@
       <machine name="olivia" compiler="intel" category="aux_clm_noresm"/>
     </machines>
     <options>
-      <option name="wallclock">00:40:00</option>
+      <option name="wallclock">02:40:00</option>
       <option name="comment">""</option>
     </options>
   </test>
@@ -5322,7 +5322,7 @@
       <machine name="olivia" compiler="intel" category="aux_clm_noresm"/>
     </machines>
     <options>
-      <option name="wallclock">00:40:00</option>
+      <option name="wallclock">02:40:00</option>
       <option name="comment">""</option>
     </options>
   </test>
@@ -5332,7 +5332,7 @@
       <machine name="olivia" compiler="intel" category="aux_clm_noresm"/>
     </machines>
     <options>
-      <option name="wallclock">01:40:00</option>
+      <option name="wallclock">02:40:00</option>
       <option name="comment">""</option>
     </options>
   </test>
